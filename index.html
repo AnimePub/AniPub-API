@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniPub API Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c14;
+  --bg2: #0f1220;
+  --bg3: #141829;
+  --surface: #181d2e;
+  --surface2: #1e2438;
+  --border: #252d47;
+  --border2: #2d3858;
+  --accent: #6c63ff;
+  --accent2: #ff6584;
+  --accent3: #43e97b;
+  --accent4: #f8c53a;
+  --text: #e8ecf7;
+  --text2: #9ba3c0;
+  --text3: #5c6485;
+  --get: #43e97b;
+  --post: #f8c53a;
+  --delete: #ff6584;
+  --code-bg: #0d1117;
+  --syn-keyword: #c792ea;
+  --syn-string: #a5e3a0;
+  --syn-number: #f78c6c;
+  --syn-func: #82aaff;
+  --syn-comment: #546e7a;
+  --syn-prop: #ffcb6b;
+  --syn-operator: #89ddff;
+  --syn-var: #f07178;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ========== HEADER ========== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px;
+  background: rgba(10,12,20,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+}
+
+.header-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px;
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+}
+
+.header-links {
+  display: flex; align-items: center; gap: 20px;
+}
+
+.header-links a {
+  color: var(--text2); text-decoration: none; font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.header-links a:hover { color: var(--text); }
+
+.header-badge {
+  background: var(--surface2); border: 1px solid var(--border2);
+  padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; color: var(--accent3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ========== LAYOUT ========== */
+.layout {
+  display: flex;
+  padding-top: 60px;
+  min-height: 100vh;
+}
+
+/* ========== SIDEBAR ========== */
+.sidebar {
+  position: fixed; top: 60px; left: 0; bottom: 0;
+  width: 260px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 20px 0;
+  z-index: 50;
+  transition: transform 0.3s;
+}
+
+.sidebar-section-title {
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text3);
+  padding: 12px 20px 6px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px; cursor: pointer;
+  font-size: 0.88rem; color: var(--text2);
+  transition: all 0.15s;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.nav-item.active {
+  background: rgba(108,99,255,0.12);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-method {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+  flex-shrink: 0;
+}
+.nav-method.get { background: rgba(67,233,123,0.15); color: var(--get); }
+.nav-method.post { background: rgba(248,197,58,0.15); color: var(--post); }
+.nav-method.del { background: rgba(255,101,132,0.15); color: var(--delete); }
+
+/* ========== MAIN ========== */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  padding: 0;
+  min-width: 0;
+}
+
+/* ========== HERO ========== */
+.hero {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 60px 50px;
+  position: relative; overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -80px; left: 200px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,101,132,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: rgba(108,99,255,0.15); border: 1px solid rgba(108,99,255,0.3);
+  color: var(--accent); font-size: 0.75rem; font-weight: 600;
+  padding: 4px 12px; border-radius: 20px;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.hero h1 {
+  font-size: 3rem; font-weight: 900; line-height: 1.1;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #fff 0%, #9ba3c0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 1.05rem; color: var(--text2); max-width: 600px;
+  line-height: 1.7; margin-bottom: 30px;
+}
+
+.hero-stats {
+  display: flex; gap: 32px; flex-wrap: wrap;
+}
+
+.hero-stat {
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+.hero-stat-num {
+  font-size: 1.8rem; font-weight: 800; 
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+.hero-stat-label {
+  font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px;
+}
+
+.base-url-box {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--code-bg); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 14px 20px;
+  margin-top: 28px; width: fit-content;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+}
+
+.base-url-label {
+  color: var(--text3); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.base-url-text { color: var(--accent3); }
+
+.copy-btn {
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text2); padding: 4px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 0.75rem; transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+.copy-btn:hover { background: var(--border2); color: var(--text); }
+
+/* ========== CONTENT ========== */
+.content { padding: 40px 60px; }
+
+/* ========== SECTION ========== */
+.section {
+  margin-bottom: 80px;
+  scroll-margin-top: 80px;
+}
+
+.section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.method-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 5px 12px; border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.method-badge.get { background: rgba(67,233,123,0.15); color: var(--get); border: 1px solid rgba(67,233,123,0.3); }
+.method-badge.post { background: rgba(248,197,58,0.15); color: var(--post); border: 1px solid rgba(248,197,58,0.3); }
+
+.endpoint-path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 6px;
+}
+
+.endpoint-path .param { color: var(--accent4); }
+
+.section-title-text {
+  font-size: 1.4rem; font-weight: 700;
+}
+
+.section-description {
+  color: var(--text2); font-size: 0.95rem; line-height: 1.7;
+  margin-bottom: 24px; max-width: 700px;
+}
+
+/* ========== PARAMS TABLE ========== */
+.params-table {
+  width: 100%; border-collapse: collapse; margin-bottom: 28px;
+  font-size: 0.88rem;
+}
+
+.params-table th {
+  text-align: left; padding: 10px 16px;
+  background: var(--surface); color: var(--text3);
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+  border-bottom: 1px solid var(--border);
+}
+
+.params-table td {
+  padding: 11px 16px; border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.params-table tr:last-child td { border-bottom: none; }
+.params-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.param-name {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent4); font-size: 0.85rem;
+}
+
+.param-type {
+  display: inline-block;
+  background: rgba(108,99,255,0.1); color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem; padding: 2px 7px; border-radius: 4px;
+}
+
+.required-badge {
+  display: inline-block; background: rgba(255,101,132,0.1); color: var(--accent2);
+  font-size: 0.65rem; padding: 2px 7px; border-radius: 4px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.optional-badge {
+  display: inline-block; background: rgba(155,163,192,0.1); color: var(--text3);
+  font-size: 0.65rem; padding: 2px 7px; border-radius: 4px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ========== CODE TABS ========== */
+.code-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.code-tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  background: var(--bg3); overflow-x: auto;
+}
+
+.code-tab {
+  padding: 10px 18px; cursor: pointer;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--text3);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.code-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(108,99,255,0.05); }
+.code-tab:hover:not(.active) { color: var(--text2); }
+
+.code-content { display: none; }
+.code-content.active { display: block; }
+
+.code-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.code-copy {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2); padding: 3px 10px; border-radius: 5px;
+  cursor: pointer; font-size: 0.72rem; transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
+}
+.code-copy:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+pre {
+  padding: 20px;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+/* SYNTAX HIGHLIGHTING */
+.kw { color: var(--syn-keyword); }
+.str { color: var(--syn-string); }
+.num { color: var(--syn-number); }
+.fn { color: var(--syn-func); }
+.cmt { color: var(--syn-comment); font-style: italic; }
+.prop { color: var(--syn-prop); }
+.op { color: var(--syn-operator); }
+.vr { color: var(--syn-var); }
+.cls { color: #ffcb6b; }
+.punc { color: #89ddff; }
+
+/* ========== RESPONSE BLOCK ========== */
+.response-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.response-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+
+.status-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+}
+
+.status-200 { background: rgba(67,233,123,0.15); color: var(--get); border: 1px solid rgba(67,233,123,0.3); }
+.status-400 { background: rgba(255,101,132,0.15); color: var(--delete); border: 1px solid rgba(255,101,132,0.3); }
+
+/* ========== TRY IT BUTTON ========== */
+.try-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  color: white; padding: 10px 20px; border-radius: 8px;
+  border: none; cursor: pointer; font-size: 0.88rem; font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+}
+
+.try-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(108,99,255,0.4); }
+.try-btn:active { transform: translateY(0); }
+
+.try-btn svg { width: 16px; height: 16px; }
+
+/* ========== TRY IT PANEL ========== */
+.try-panel {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 28px;
+  display: none;
+}
+
+.try-panel.open { display: block; }
+
+.try-panel h4 {
+  font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.try-input-row {
+  display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.try-input-group {
+  display: flex; flex-direction: column; gap: 6px;
+  flex: 1; min-width: 120px;
+}
+
+.try-input-group label {
+  font-size: 0.75rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.try-input {
+  background: var(--code-bg); border: 1px solid var(--border2);
+  color: var(--text); padding: 9px 12px; border-radius: 7px;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+  outline: none; transition: border-color 0.2s;
+  width: 100%;
+}
+
+.try-input:focus { border-color: var(--accent); }
+
+.send-btn {
+  background: var(--accent); color: white;
+  border: none; padding: 9px 20px; border-radius: 7px;
+  cursor: pointer; font-weight: 600; font-size: 0.88rem;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s; white-space: nowrap;
+}
+
+.send-btn:hover { background: #7c74ff; }
+
+.try-result {
+  margin-top: 16px;
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+
+.try-result-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.75rem; color: var(--text3);
+}
+
+.try-result pre {
+  font-size: 0.78rem; max-height: 400px; overflow-y: auto;
+}
+
+.try-loading {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 30px;
+  color: var(--text3); font-size: 0.88rem;
+}
+
+.spinner {
+  width: 18px; height: 18px; border: 2px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ========== VISUAL CARDS ========== */
+.cards-title {
+  font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text3);
+  margin: 32px 0 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.cards-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* ANIME CARD */
+.anime-card {
+  display: flex; gap: 0; background: var(--surface);
+  border: 1px solid var(--border2); border-radius: 12px; overflow: hidden;
+  max-width: 600px; margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.anime-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+
+.anime-card-poster {
+  width: 120px; flex-shrink: 0;
+  background: var(--bg3);
+  position: relative;
+}
+
+.anime-card-poster img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block;
+}
+
+.anime-card-body {
+  padding: 16px; flex: 1; min-width: 0;
+}
+
+.anime-card-title {
+  font-size: 1rem; font-weight: 700; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.anime-card-synonyms {
+  font-size: 0.75rem; color: var(--text3); margin-bottom: 10px;
+}
+
+.anime-card-genres {
+  display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px;
+}
+
+.genre-tag {
+  background: rgba(108,99,255,0.1); color: var(--accent);
+  border: 1px solid rgba(108,99,255,0.2);
+  font-size: 0.65rem; padding: 2px 8px; border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.anime-card-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  font-size: 0.75rem; color: var(--text2);
+}
+
+.meta-row { display: flex; gap: 5px; align-items: center; }
+.meta-label { color: var(--text3); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.score-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(248,197,58,0.1); color: var(--accent4);
+  border: 1px solid rgba(248,197,58,0.2);
+  padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700;
+}
+
+.status-ongoing { color: var(--get); font-size: 0.75rem; }
+.status-finished { color: var(--text3); font-size: 0.75rem; }
+
+/* VOICE ACTORS */
+.va-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px; margin-bottom: 24px;
+}
+
+.va-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; transition: all 0.2s;
+}
+
+.va-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+.va-img {
+  width: 100%; height: 90px; object-fit: cover;
+  background: var(--bg3);
+}
+
+.va-info { padding: 10px; }
+.va-name { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
+.va-role { font-size: 0.7rem; color: var(--text3); }
+.va-lang { font-size: 0.65rem; color: var(--accent); background: rgba(108,99,255,0.1); padding: 1px 6px; border-radius: 3px; display: inline-block; margin-top: 3px; }
+
+/* STREAM LINKS */
+.ep-list {
+  display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;
+}
+
+.ep-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px;
+}
+
+.ep-num {
+  background: var(--accent); color: white; font-weight: 700; font-size: 0.8rem;
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.ep-link {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+  color: var(--text2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.ep-copy-btn {
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text2); padding: 4px 10px; border-radius: 5px;
+  cursor: pointer; font-size: 0.72rem; transition: all 0.2s; flex-shrink: 0;
+  font-family: 'Outfit', sans-serif;
+}
+.ep-copy-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* CHECK RESULT */
+.check-result {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 16px;
+  margin-top: 14px;
+}
+
+.check-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.check-icon.match { background: rgba(67,233,123,0.1); }
+.check-icon.no-match { background: rgba(255,101,132,0.1); }
+
+.check-details { flex: 1; }
+.check-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+.check-sub { font-size: 0.8rem; color: var(--text2); }
+
+/* ========== DIVIDER ========== */
+.section-divider {
+  height: 1px; background: var(--border); margin: 60px 0;
+}
+
+/* ========== MOBILE TOGGLE ========== */
+.mobile-toggle {
+  display: none;
+  position: fixed; top: 15px; right: 24px; z-index: 200;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text); width: 34px; height: 34px;
+  border-radius: 7px; cursor: pointer;
+  align-items: center; justify-content: center;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 40;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main { margin-left: 0; }
+  .mobile-toggle { display: flex; }
+  .hero { padding: 40px 24px 36px; }
+  .hero h1 { font-size: 2rem; }
+  .content { padding: 30px 24px; }
+  .hero-stats { gap: 20px; }
+}
+
+@media (max-width: 600px) {
+  .header-links { display: none; }
+  .hero h1 { font-size: 1.6rem; }
+  .section-header { flex-wrap: wrap; }
+  .anime-card { flex-direction: column; }
+  .anime-card-poster { width: 100%; height: 180px; }
+  .va-grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
+}
+
+/* ========== MISC ========== */
+.info-callout {
+  background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.25);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 0.88rem; color: var(--text2); margin-bottom: 20px;
+  display: flex; gap: 10px;
+}
+
+.info-callout-icon { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+.warn-callout {
+  background: rgba(248,197,58,0.08); border: 1px solid rgba(248,197,58,0.25);
+  border-radius: 8px; padding: 14px 16px;
+  font-size: 0.88rem; color: var(--text2); margin-bottom: 20px;
+  display: flex; gap: 10px;
+}
+
+.warn-callout-icon { color: var(--accent4); flex-shrink: 0; }
+
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+
+@media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+/* LOADING PULSE */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* RESPONSE TIME */
+.res-time {
+  font-size: 0.72rem; color: var(--text3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--get);
+  display: inline-block;
+  box-shadow: 0 0 0 3px rgba(67,233,123,0.2);
+  animation: pulse-live 2s infinite;
+  margin-right: 6px;
+}
+@keyframes pulse-live {
+  0%,100%{box-shadow:0 0 0 3px rgba(67,233,123,0.2)}
+  50%{box-shadow:0 0 0 6px rgba(67,233,123,0.05)}
+}
+
+.no-results {
+  text-align: center; padding: 40px; color: var(--text3);
+  font-size: 0.9rem;
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE SIDEBAR TOGGLE -->
+<button class="mobile-toggle" onclick="toggleSidebar()">
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <span class="logo-badge">API</span>
+    <span>AniPub</span>
+    <span style="color:var(--text3);font-weight:400">Docs</span>
+  </div>
+  <div class="header-links">
+    <a href="https://anipub.xyz" target="_blank">← Visit AniPub</a>
+    <span class="header-badge"><span class="live-dot"></span>v1 · Live</span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-section-title">Getting Started</div>
+  <a href="#intro" class="nav-item active">Introduction</a>
+  <a href="#authentication" class="nav-item">Authentication</a>
+  <a href="#errors" class="nav-item">Errors</a>
+
+  <div class="sidebar-section-title" style="margin-top:8px">Endpoints</div>
+  <a href="#get-info" class="nav-item">
+    <span class="nav-method get">GET</span>/api/info/:id
+  </a>
+  <a href="#get-all" class="nav-item">
+    <span class="nav-method get">GET</span>/api/getAll
+  </a>
+  <a href="#get-details" class="nav-item">
+    <span class="nav-method get">GET</span>/v1/api/details/:id
+  </a>
+  <a href="#get-anime-details" class="nav-item">
+    <span class="nav-method get">GET</span>/anime/api/details/:id
+  </a>
+  <a href="#post-check" class="nav-item">
+    <span class="nav-method post">POST</span>/api/check
+  </a>
+
+  <div class="sidebar-section-title" style="margin-top:8px">Interactive</div>
+  <a href="#playground" class="nav-item">API Playground</a>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">REST API · v1</div>
+    <h1>AniPub API<br>Documentation</h1>
+    <p>Access a growing anime database including metadata, streaming links, MAL integration, and character data — all through a clean, fast REST API.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num" id="total-count">150+</span>
+        <span class="hero-stat-label">Anime Listed</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">5</span>
+        <span class="hero-stat-label">Endpoints</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">Free</span>
+        <span class="hero-stat-label">No Auth Required</span>
+      </div>
+    </div>
+    <div class="base-url-box">
+      <span class="base-url-label">Base URL</span>
+      <span class="base-url-text">https://www.anipub.xyz</span>
+      <button class="copy-btn" onclick="copyText('https://www.anipub.xyz', this)">Copy</button>
+    </div>
+  </section>
+
+  <div class="content">
+
+    <!-- INTRO -->
+    <section class="section" id="intro">
+      <div class="section-header">
+        <span class="section-title-text">Introduction</span>
+      </div>
+      <p class="section-description">
+        The AniPub API provides programmatic access to anime metadata, streaming sources, character information, and MyAnimeList-integrated data. All endpoints are publicly accessible over HTTPS — no API key or authentication needed.
+      </p>
+      <div class="info-callout">
+        <span class="info-callout-icon">ℹ</span>
+        <span>All responses are in <strong>JSON</strong> format. The API uses standard HTTP status codes. CORS is enabled for browser-based requests.</span>
+      </div>
+      <div class="warn-callout">
+        <span class="warn-callout-icon">⚠</span>
+        <span>When an <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">ImagePath</code> or <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">Cover</code> field does not start with <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">https://</code>, prepend <code style="color:var(--accent3);font-family:JetBrains Mono,monospace">https://anipub.xyz/</code> to construct the full URL.</span>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section class="section" id="authentication">
+      <div class="section-header">
+        <span class="section-title-text">Authentication</span>
+      </div>
+      <p class="section-description">
+        No authentication is required. All endpoints are open and do not require API keys, OAuth tokens, or any headers beyond standard HTTP.
+      </p>
+      <div class="info-callout">
+        <span class="info-callout-icon">✓</span>
+        <span>Simply make requests to any endpoint. Rate limiting may apply for excessive usage.</span>
+      </div>
+    </section>
+
+    <!-- ERRORS -->
+    <section class="section" id="errors">
+      <div class="section-header">
+        <span class="section-title-text">Error Codes</span>
+      </div>
+      <table class="params-table">
+        <thead><tr><th>Status</th><th>Meaning</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="status-pill status-200">200</span></td><td>OK</td><td>Request succeeded</td></tr>
+          <tr><td><span class="status-pill status-400">400</span></td><td>Bad Request</td><td>Missing or invalid parameters</td></tr>
+          <tr><td><span class="status-pill status-400">404</span></td><td>Not Found</td><td>Anime with given ID not found</td></tr>
+          <tr><td><span class="status-pill status-400">500</span></td><td>Server Error</td><td>Internal server issue</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== GET /api/info/:id ===== -->
+    <section class="section" id="get-info">
+      <div class="section-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/api/info/<span class="param">:id</span></span>
+        <span class="section-title-text">Get Anime Info</span>
+      </div>
+      <p class="section-description">Returns metadata for a specific anime by its integer ID. IDs start from 1 and go up to the total count returned by <code style="color:var(--accent);font-family:JetBrains Mono,monospace">/api/getAll</code>.</p>
+
+      <table class="params-table">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">id</span></td>
+            <td><span class="param-type">integer</span></td>
+            <td><span class="required-badge">Required</span></td>
+            <td>Anime ID — must be ≥ 1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- CODE BLOCK -->
+      <div class="code-block">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="switchTab(this, 'info-js')">Node.js</div>
+          <div class="code-tab" onclick="switchTab(this, 'info-py')">Python</div>
+          <div class="code-tab" onclick="switchTab(this, 'info-php')">PHP</div>
+          <div class="code-tab" onclick="switchTab(this, 'info-curl')">cURL</div>
+          <div class="code-tab" onclick="switchTab(this, 'info-go')">Go</div>
+          <div class="code-tab" onclick="switchTab(this, 'info-ruby')">Ruby</div>
+        </div>
+
+        <div class="code-content active" id="info-js">
+          <div class="code-header"><span>javascript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">const</span> <span class="vr">fetch</span> = <span class="fn">require</span>(<span class="str">'node-fetch'</span>); <span class="cmt">// or use built-in fetch (Node 18+)</span>
+
+<span class="kw">async function</span> <span class="fn">getAnimeInfo</span>(<span class="vr">id</span>) {
+  <span class="kw">const</span> <span class="vr">response</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`https://www.anipub.xyz/api/info/<span class="punc">${</span><span class="vr">id</span><span class="punc">}</span>`</span>);
+
+  <span class="kw">if</span> (<span class="op">!</span><span class="vr">response</span>.<span class="prop">ok</span>) {
+    <span class="kw">throw new</span> <span class="cls">Error</span>(<span class="str">`HTTP error: <span class="punc">${</span><span class="vr">response</span>.<span class="prop">status</span><span class="punc">}</span>`</span>);
+  }
+
+  <span class="kw">const</span> <span class="vr">data</span> = <span class="kw">await</span> <span class="vr">response</span>.<span class="fn">json</span>();
+
+  <span class="cmt">// Resolve relative image paths</span>
+  <span class="kw">const</span> <span class="fn">resolveImg</span> = <span class="vr">path</span> <span class="op">=></span>
+    <span class="vr">path</span>.<span class="fn">startsWith</span>(<span class="str">'https://'</span>) ? <span class="vr">path</span> : <span class="str">`https://anipub.xyz/<span class="punc">${</span><span class="vr">path</span><span class="punc">}</span>`</span>;
+
+  <span class="vr">data</span>.<span class="prop">ImagePath</span> = <span class="fn">resolveImg</span>(<span class="vr">data</span>.<span class="prop">ImagePath</span>);
+  <span class="vr">data</span>.<span class="prop">Cover</span>     = <span class="fn">resolveImg</span>(<span class="vr">data</span>.<span class="prop">Cover</span>);
+
+  <span class="kw">return</span> <span class="vr">data</span>;
+}
+
+<span class="fn">getAnimeInfo</span>(<span class="num">1</span>).<span class="fn">then</span>(<span class="vr">console</span>.<span class="prop">log</span>).<span class="fn">catch</span>(<span class="vr">console</span>.<span class="prop">error</span>);</pre>
+        </div>
+
+        <div class="code-content" id="info-py">
+          <div class="code-header"><span>python</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">requests</span>
+
+<span class="kw">def</span> <span class="fn">get_anime_info</span>(<span class="vr">anime_id</span>: <span class="vr">int</span>) <span class="op">-></span> <span class="vr">dict</span>:
+    <span class="vr">url</span> = <span class="str">f"https://www.anipub.xyz/api/info/<span class="punc">{</span><span class="vr">anime_id</span><span class="punc">}</span>"</span>
+    <span class="vr">response</span> = <span class="vr">requests</span>.<span class="fn">get</span>(<span class="vr">url</span>)
+    <span class="vr">response</span>.<span class="fn">raise_for_status</span>()
+    <span class="vr">data</span> = <span class="vr">response</span>.<span class="fn">json</span>()
+
+    <span class="cmt"># Resolve relative image paths</span>
+    <span class="kw">def</span> <span class="fn">resolve_img</span>(<span class="vr">path</span>):
+        <span class="kw">return</span> <span class="vr">path</span> <span class="kw">if</span> <span class="vr">path</span>.<span class="fn">startswith</span>(<span class="str">"https://"</span>) <span class="kw">else</span> <span class="str">f"https://anipub.xyz/<span class="punc">{</span><span class="vr">path</span><span class="punc">}</span>"</span>
+
+    <span class="vr">data</span>[<span class="str">"ImagePath"</span>] = <span class="fn">resolve_img</span>(<span class="vr">data</span>[<span class="str">"ImagePath"</span>])
+    <span class="vr">data</span>[<span class="str">"Cover"</span>]     = <span class="fn">resolve_img</span>(<span class="vr">data</span>[<span class="str">"Cover"</span>])
+    <span class="kw">return</span> <span class="vr">data</span>
+
+<span class="vr">anime</span> = <span class="fn">get_anime_info</span>(<span class="num">1</span>)
+<span class="fn">print</span>(<span class="vr">anime</span>[<span class="str">"Name"</span>], <span class="vr">anime</span>[<span class="str">"MALScore"</span>])</pre>
+        </div>
+
+        <div class="code-content" id="info-php">
+          <div class="code-header"><span>php</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="op">&lt;?php</span>
+
+<span class="kw">function</span> <span class="fn">getAnimeInfo</span>(<span class="vr">$id</span>) {
+    <span class="vr">$url</span> = <span class="str">"https://www.anipub.xyz/api/info/"</span> . <span class="fn">intval</span>(<span class="vr">$id</span>);
+    <span class="vr">$ch</span>  = <span class="fn">curl_init</span>(<span class="vr">$url</span>);
+    <span class="fn">curl_setopt</span>(<span class="vr">$ch</span>, <span class="vr">CURLOPT_RETURNTRANSFER</span>, <span class="kw">true</span>);
+    <span class="vr">$body</span> = <span class="fn">curl_exec</span>(<span class="vr">$ch</span>);
+    <span class="fn">curl_close</span>(<span class="vr">$ch</span>);
+
+    <span class="vr">$data</span> = <span class="fn">json_decode</span>(<span class="vr">$body</span>, <span class="kw">true</span>);
+
+    <span class="cmt">// Resolve relative image paths</span>
+    <span class="kw">foreach</span> ([<span class="str">'ImagePath'</span>, <span class="str">'Cover'</span>] <span class="kw">as</span> <span class="vr">$key</span>) {
+        <span class="kw">if</span> (!<span class="fn">str_starts_with</span>(<span class="vr">$data</span>[<span class="vr">$key</span>], <span class="str">'https://'</span>)) {
+            <span class="vr">$data</span>[<span class="vr">$key</span>] = <span class="str">'https://anipub.xyz/'</span> . <span class="vr">$data</span>[<span class="vr">$key</span>];
+        }
+    }
+
+    <span class="kw">return</span> <span class="vr">$data</span>;
+}
+
+<span class="vr">$anime</span> = <span class="fn">getAnimeInfo</span>(<span class="num">1</span>);
+<span class="fn">echo</span> <span class="vr">$anime</span>[<span class="str">'Name'</span>] . <span class="str">' — Score: '</span> . <span class="vr">$anime</span>[<span class="str">'MALScore'</span>];
+<span class="op">?></span></pre>
+        </div>
+
+        <div class="code-content" id="info-curl">
+          <div class="code-header"><span>bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="cmt"># Get anime info for ID 1</span>
+<span class="fn">curl</span> <span class="op">-X</span> GET <span class="str">"https://www.anipub.xyz/api/info/1"</span> \
+  <span class="op">-H</span> <span class="str">"Accept: application/json"</span>
+
+<span class="cmt"># Pretty print with jq</span>
+<span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/api/info/1"</span> <span class="op">|</span> <span class="fn">jq</span> <span class="str">'.'</span>
+
+<span class="cmt"># Extract just name and score</span>
+<span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/api/info/1"</span> <span class="op">|</span> \
+  <span class="fn">jq</span> <span class="str">'{name: .Name, score: .MALScore, genres: .Genres}'</span></pre>
+        </div>
+
+        <div class="code-content" id="info-go">
+          <div class="code-header"><span>go</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">package</span> <span class="vr">main</span>
+
+<span class="kw">import</span> (
+    <span class="str">"encoding/json"</span>
+    <span class="str">"fmt"</span>
+    <span class="str">"net/http"</span>
+    <span class="str">"strings"</span>
+)
+
+<span class="kw">type</span> <span class="cls">AnimeInfo</span> <span class="kw">struct</span> {
+    ID        <span class="vr">int</span>      <span class="str">`json:"_id"`</span>
+    Name      <span class="vr">string</span>   <span class="str">`json:"Name"`</span>
+    ImagePath <span class="vr">string</span>   <span class="str">`json:"ImagePath"`</span>
+    Cover     <span class="vr">string</span>   <span class="str">`json:"Cover"`</span>
+    MALScore  <span class="vr">string</span>   <span class="str">`json:"MALScore"`</span>
+    Genres    []<span class="vr">string</span> <span class="str">`json:"Genres"`</span>
+    Status    <span class="vr">string</span>   <span class="str">`json:"Status"`</span>
+}
+
+<span class="kw">func</span> <span class="fn">resolveImg</span>(<span class="vr">path</span> <span class="vr">string</span>) <span class="vr">string</span> {
+    <span class="kw">if</span> <span class="vr">strings</span>.<span class="fn">HasPrefix</span>(<span class="vr">path</span>, <span class="str">"https://"</span>) {
+        <span class="kw">return</span> <span class="vr">path</span>
+    }
+    <span class="kw">return</span> <span class="str">"https://anipub.xyz/"</span> + <span class="vr">path</span>
+}
+
+<span class="kw">func</span> <span class="fn">getAnimeInfo</span>(<span class="vr">id</span> <span class="vr">int</span>) (<span class="cls">AnimeInfo</span>, <span class="vr">error</span>) {
+    <span class="vr">url</span> := <span class="vr">fmt</span>.<span class="fn">Sprintf</span>(<span class="str">"https://www.anipub.xyz/api/info/%d"</span>, <span class="vr">id</span>)
+    <span class="vr">resp</span>, <span class="vr">err</span> := <span class="vr">http</span>.<span class="fn">Get</span>(<span class="vr">url</span>)
+    <span class="kw">if</span> <span class="vr">err</span> != <span class="kw">nil</span> { <span class="kw">return</span> <span class="cls">AnimeInfo</span>{}, <span class="vr">err</span> }
+    <span class="kw">defer</span> <span class="vr">resp</span>.<span class="prop">Body</span>.<span class="fn">Close</span>()
+
+    <span class="kw">var</span> <span class="vr">anime</span> <span class="cls">AnimeInfo</span>
+    <span class="vr">json</span>.<span class="fn">NewDecoder</span>(<span class="vr">resp</span>.<span class="prop">Body</span>).<span class="fn">Decode</span>(&<span class="vr">anime</span>)
+    <span class="vr">anime</span>.<span class="prop">ImagePath</span> = <span class="fn">resolveImg</span>(<span class="vr">anime</span>.<span class="prop">ImagePath</span>)
+    <span class="vr">anime</span>.<span class="prop">Cover</span>     = <span class="fn">resolveImg</span>(<span class="vr">anime</span>.<span class="prop">Cover</span>)
+    <span class="kw">return</span> <span class="vr">anime</span>, <span class="kw">nil</span>
+}</pre>
+        </div>
+
+        <div class="code-content" id="info-ruby">
+          <div class="code-header"><span>ruby</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">require</span> <span class="str">'net/http'</span>
+<span class="kw">require</span> <span class="str">'json'</span>
+<span class="kw">require</span> <span class="str">'uri'</span>
+
+<span class="kw">def</span> <span class="fn">get_anime_info</span>(<span class="vr">id</span>)
+  <span class="vr">uri</span>  = <span class="cls">URI</span>.<span class="fn">parse</span>(<span class="str">"https://www.anipub.xyz/api/info/<span class="punc">#{</span><span class="vr">id</span><span class="punc">}</span>"</span>)
+  <span class="vr">resp</span> = <span class="cls">Net</span>::<span class="cls">HTTP</span>.<span class="fn">get_response</span>(<span class="vr">uri</span>)
+  <span class="vr">data</span> = <span class="cls">JSON</span>.<span class="fn">parse</span>(<span class="vr">resp</span>.<span class="prop">body</span>)
+
+  <span class="cmt"># Resolve relative image paths</span>
+  [<span class="str">'ImagePath'</span>, <span class="str">'Cover'</span>].<span class="fn">each</span> <span class="kw">do</span> |<span class="vr">key</span>|
+    <span class="vr">data</span>[<span class="vr">key</span>] = <span class="str">"https://anipub.xyz/<span class="punc">#{</span><span class="vr">data</span>[<span class="vr">key</span>]<span class="punc">}</span>"</span> <span class="kw">unless</span> <span class="vr">data</span>[<span class="vr">key</span>].<span class="fn">start_with?</span>(<span class="str">'https://'</span>)
+  <span class="kw">end</span>
+  <span class="vr">data</span>
+<span class="kw">end</span>
+
+<span class="vr">anime</span> = <span class="fn">get_anime_info</span>(<span class="num">1</span>)
+<span class="fn">puts</span> <span class="str">"<span class="punc">#{</span><span class="vr">anime</span>[<span class="str">'Name'</span>]<span class="punc">}</span> — MAL Score: <span class="punc">#{</span><span class="vr">anime</span>[<span class="str">'MALScore'</span>]<span class="punc">}</span>"</span></pre>
+        </div>
+      </div>
+
+      <!-- TRY IT -->
+      <button class="try-btn" onclick="toggleTry('try-info')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Try it yourself
+      </button>
+      <div class="try-panel" id="try-info">
+        <h4>▶ GET /api/info/:id</h4>
+        <div class="try-input-row">
+          <div class="try-input-group">
+            <label>Anime ID</label>
+            <input class="try-input" type="number" id="info-id-input" value="1" min="1" placeholder="e.g. 1">
+          </div>
+          <button class="send-btn" onclick="tryInfoApi()">Send Request</button>
+        </div>
+        <div class="try-result" id="try-info-result" style="display:none"></div>
+      </div>
+
+      <!-- RESPONSE -->
+      <div class="response-block">
+        <div class="response-header">
+          <span class="status-pill status-200">200 OK</span>
+          <span style="color:var(--text2);font-size:0.82rem">application/json</span>
+        </div>
+<pre style="padding:20px;font-size:0.8rem;line-height:1.7">{
+  <span class="prop">"_id"</span><span class="op">:</span> <span class="num">1</span>,
+  <span class="prop">"Name"</span><span class="op">:</span> <span class="str">"Onmyou Kaiten Re:Birth"</span>,
+  <span class="prop">"ImagePath"</span><span class="op">:</span> <span class="str">"onmyou-kaiten-rebirth.webp"</span>,  <span class="cmt">// → prepend https://anipub.xyz/ if no https://</span>
+  <span class="prop">"Cover"</span><span class="op">:</span> <span class="str">"onmyou-kaiten-rebirth1.webp"</span>,
+  <span class="prop">"Synonyms"</span><span class="op">:</span> <span class="str">"Onmyou Kaiten Re:verse"</span>,
+  <span class="prop">"Aired"</span><span class="op">:</span> <span class="str">"Jul 3, 2025 to ?"</span>,
+  <span class="prop">"Premiered"</span><span class="op">:</span> <span class="str">"Summer 2025"</span>,
+  <span class="prop">"RatingsNum"</span><span class="op">:</span> <span class="num">35</span>,
+  <span class="prop">"Genres"</span><span class="op">:</span> [<span class="str">"action"</span>, <span class="str">"fantasy"</span>],
+  <span class="prop">"Studios"</span><span class="op">:</span> <span class="str">"Aniplex, Shueisha, ufotable, Aniplex of America"</span>,
+  <span class="prop">"Producers"</span><span class="op">:</span> <span class="str">"David Production"</span>,
+  <span class="prop">"DescripTion"</span><span class="op">:</span> <span class="str">"Onmyo Kaiten Re : Birth Verse anime..."</span>,
+  <span class="prop">"Duration"</span><span class="op">:</span> <span class="str">"23m"</span>,
+  <span class="prop">"MALScore"</span><span class="op">:</span> <span class="str">"6.8"</span>,
+  <span class="prop">"Status"</span><span class="op">:</span> <span class="str">"Ongoing"</span>,
+  <span class="prop">"epCount"</span><span class="op">:</span> <span class="num">5</span>
+}</pre>
+      </div>
+
+      <!-- ANIME CARD SAMPLE -->
+      <div class="cards-title">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Sample Anime Card Built From Response
+      </div>
+
+      <div class="anime-card">
+        <div class="anime-card-poster">
+          <img src="https://cdn.myanimelist.net/images/anime/1208/122776.jpg"
+               onerror="this.style.background='var(--bg3)';this.style.display='flex';this.style.alignItems='center';this.style.justifyContent='center'"
+               alt="Poster">
+        </div>
+        <div class="anime-card-body">
+          <div class="anime-card-title">Onmyou Kaiten Re:Birth</div>
+          <div class="anime-card-synonyms">AKA: Onmyou Kaiten Re:verse</div>
+          <div class="anime-card-genres">
+            <span class="genre-tag">action</span>
+            <span class="genre-tag">fantasy</span>
+          </div>
+          <div class="anime-card-meta">
+            <div class="meta-row"><span class="meta-label">Studio</span> ufotable</div>
+            <div class="meta-row"><span class="meta-label">Duration</span> 23m</div>
+            <div class="meta-row"><span class="score-badge">★ 6.8</span></div>
+            <div class="meta-row"><span class="status-ongoing">● Ongoing</span></div>
+            <div class="meta-row"><span class="meta-label">Premiered</span> Summer 2025</div>
+            <div class="meta-row"><span class="meta-label">Episodes</span> 5</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== GET /api/getAll ===== -->
+    <section class="section" id="get-all">
+      <div class="section-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/api/getAll</span>
+        <span class="section-title-text">Get Total Count</span>
+      </div>
+      <p class="section-description">Returns an integer representing the total number of anime entries currently in the database. Use this to know the valid ID range for other endpoints.</p>
+
+      <div class="code-block">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="switchTab(this, 'all-js')">Node.js</div>
+          <div class="code-tab" onclick="switchTab(this, 'all-py')">Python</div>
+          <div class="code-tab" onclick="switchTab(this, 'all-curl')">cURL</div>
+          <div class="code-tab" onclick="switchTab(this, 'all-php')">PHP</div>
+        </div>
+        <div class="code-content active" id="all-js">
+          <div class="code-header"><span>javascript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">const</span> <span class="vr">res</span>   = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://www.anipub.xyz/api/getAll'</span>);
+<span class="kw">const</span> <span class="vr">total</span> = <span class="kw">await</span> <span class="vr">res</span>.<span class="fn">json</span>();   <span class="cmt">// e.g. 150</span>
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Database has <span class="punc">${</span><span class="vr">total</span><span class="punc">}</span> anime entries`</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">`Valid IDs: 1 → <span class="punc">${</span><span class="vr">total</span><span class="punc">}</span>`</span>);</pre>
+        </div>
+        <div class="code-content" id="all-py">
+          <div class="code-header"><span>python</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">requests</span>
+
+<span class="vr">total</span> = <span class="vr">requests</span>.<span class="fn">get</span>(<span class="str">"https://www.anipub.xyz/api/getAll"</span>).<span class="fn">json</span>()
+<span class="fn">print</span>(<span class="str">f"Total anime: <span class="punc">{</span><span class="vr">total</span><span class="punc">}</span> | Valid IDs: 1 to <span class="punc">{</span><span class="vr">total</span><span class="punc">}</span>"</span>)</pre>
+        </div>
+        <div class="code-content" id="all-curl">
+          <div class="code-header"><span>bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/api/getAll"</span>
+<span class="cmt"># Returns: 150</span></pre>
+        </div>
+        <div class="code-content" id="all-php">
+          <div class="code-header"><span>php</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="vr">$total</span> = <span class="fn">json_decode</span>(<span class="fn">file_get_contents</span>(<span class="str">'https://www.anipub.xyz/api/getAll'</span>));
+<span class="fn">echo</span> <span class="str">"Total: <span class="punc">$total</span> | Valid IDs: 1–<span class="punc">$total</span>"</span>;</pre>
+        </div>
+      </div>
+
+      <button class="try-btn" onclick="toggleTry('try-all')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Try it yourself
+      </button>
+      <div class="try-panel" id="try-all">
+        <h4>▶ GET /api/getAll</h4>
+        <div class="try-input-row">
+          <button class="send-btn" onclick="tryGetAll()">Send Request</button>
+        </div>
+        <div class="try-result" id="try-all-result" style="display:none"></div>
+      </div>
+
+      <div class="response-block">
+        <div class="response-header">
+          <span class="status-pill status-200">200 OK</span>
+          <span style="color:var(--text2);font-size:0.82rem">Returns a plain integer</span>
+        </div>
+<pre style="padding:20px;font-size:1.5rem;font-weight:700;color:var(--accent3)">150</pre>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== GET /v1/api/details/:id ===== -->
+    <section class="section" id="get-details">
+      <div class="section-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/v1/api/details/<span class="param">:id</span></span>
+        <span class="section-title-text">Get Streaming Links</span>
+      </div>
+      <p class="section-description">Returns iframe streaming links for a specific anime including per-episode links. The <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">link</code> field contains <code style="color:var(--accent);font-family:JetBrains Mono,monospace">src=https://...</code> suitable for iframe embeds. Note: the <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">_id</code> field may now be a MongoDB ObjectId string.</p>
+
+      <div class="warn-callout">
+        <span class="warn-callout-icon">⚠</span>
+        <span>The <code style="color:var(--accent4);font-family:JetBrains Mono,monospace">_id</code> field is deprecated as an integer. It may be a MongoDB ObjectId string like <code style="font-family:JetBrains Mono,monospace;color:var(--accent3)">"68971dc4e9396134d130f8e8"</code>. Use the URL parameter <code style="font-family:JetBrains Mono,monospace;color:var(--accent4)">:id</code> as the authoritative identifier.</span>
+      </div>
+
+      <table class="params-table">
+        <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="param-name">id</span></td><td><span class="param-type">integer</span></td><td><span class="required-badge">Required</span></td><td>Anime ID (1 to getAll value)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="switchTab(this, 'det-js')">Node.js</div>
+          <div class="code-tab" onclick="switchTab(this, 'det-py')">Python</div>
+          <div class="code-tab" onclick="switchTab(this, 'det-curl')">cURL</div>
+          <div class="code-tab" onclick="switchTab(this, 'det-php')">PHP</div>
+        </div>
+        <div class="code-content active" id="det-js">
+          <div class="code-header"><span>javascript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">async function</span> <span class="fn">getStreamLinks</span>(<span class="vr">id</span>) {
+  <span class="kw">const</span> <span class="vr">res</span>  = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`https://www.anipub.xyz/v1/api/details/<span class="punc">${</span><span class="vr">id</span><span class="punc">}</span>`</span>);
+  <span class="kw">const</span> <span class="vr">data</span> = <span class="kw">await</span> <span class="vr">res</span>.<span class="fn">json</span>();
+  <span class="kw">const</span> { <span class="vr">local</span> } = <span class="vr">data</span>;
+
+  <span class="cmt">// Convert "src=URL" → iframe-ready string</span>
+  <span class="kw">const</span> <span class="fn">toIframeSrc</span> = <span class="vr">link</span> <span class="op">=></span> <span class="vr">link</span>.<span class="fn">replace</span>(<span class="str">'src='</span>, <span class="str">''</span>);
+
+  <span class="kw">const</span> <span class="vr">mainLink</span>  = <span class="fn">toIframeSrc</span>(<span class="vr">local</span>.<span class="prop">link</span>);
+  <span class="kw">const</span> <span class="vr">epLinks</span>   = <span class="vr">local</span>.<span class="prop">ep</span>.<span class="fn">map</span>((<span class="vr">e</span>, <span class="vr">i</span>) <span class="op">=></span> ({
+    episode<span class="op">:</span> <span class="vr">i</span> + <span class="num">1</span>,
+    src<span class="op">:</span> <span class="fn">toIframeSrc</span>(<span class="vr">e</span>.<span class="prop">link</span>)
+  }));
+
+  <span class="kw">return</span> { <span class="vr">mainLink</span>, <span class="vr">epLinks</span>, name<span class="op">:</span> <span class="vr">local</span>.<span class="prop">name</span> };
+}
+
+<span class="fn">getStreamLinks</span>(<span class="num">119</span>).<span class="fn">then</span>(<span class="vr">d</span> <span class="op">=></span> {
+  <span class="vr">console</span>.<span class="fn">log</span>(<span class="str">`Anime: <span class="punc">${</span><span class="vr">d</span>.<span class="prop">name</span><span class="punc">}</span>`</span>);
+  <span class="vr">d</span>.<span class="prop">epLinks</span>.<span class="fn">forEach</span>(<span class="vr">e</span> <span class="op">=></span> <span class="vr">console</span>.<span class="fn">log</span>(<span class="str">`EP <span class="punc">${</span><span class="vr">e</span>.<span class="prop">episode</span><span class="punc">}</span>: <span class="punc">${</span><span class="vr">e</span>.<span class="prop">src</span><span class="punc">}</span>`</span>));
+});</pre>
+        </div>
+        <div class="code-content" id="det-py">
+          <div class="code-header"><span>python</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">requests</span>
+
+<span class="vr">data</span>  = <span class="vr">requests</span>.<span class="fn">get</span>(<span class="str">"https://www.anipub.xyz/v1/api/details/119"</span>).<span class="fn">json</span>()
+<span class="vr">local</span> = <span class="vr">data</span>[<span class="str">"local"</span>]
+
+<span class="fn">print</span>(<span class="str">f"Anime: <span class="punc">{</span><span class="vr">local</span>[<span class="str">'name'</span>]<span class="punc">}</span>"</span>)
+
+<span class="kw">for</span> <span class="vr">i</span>, <span class="vr">ep</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="vr">local</span>[<span class="str">"ep"</span>], <span class="num">1</span>):
+    <span class="vr">src</span> = <span class="vr">ep</span>[<span class="str">"link"</span>].<span class="fn">replace</span>(<span class="str">"src="</span>, <span class="str">""</span>)
+    <span class="fn">print</span>(<span class="str">f"Episode <span class="punc">{</span><span class="vr">i</span><span class="punc">}</span>: <span class="punc">{</span><span class="vr">src</span><span class="punc">}</span>"</span>)</pre>
+        </div>
+        <div class="code-content" id="det-curl">
+          <div class="code-header"><span>bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/v1/api/details/119"</span> <span class="op">|</span> <span class="fn">jq</span> <span class="str">'.local.ep[].link'</span></pre>
+        </div>
+        <div class="code-content" id="det-php">
+          <div class="code-header"><span>php</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="vr">$data</span>  = <span class="fn">json_decode</span>(<span class="fn">file_get_contents</span>(<span class="str">'https://www.anipub.xyz/v1/api/details/119'</span>), <span class="kw">true</span>);
+<span class="vr">$local</span> = <span class="vr">$data</span>[<span class="str">'local'</span>];
+<span class="kw">foreach</span> (<span class="vr">$local</span>[<span class="str">'ep'</span>] <span class="kw">as</span> <span class="vr">$i</span> => <span class="vr">$ep</span>) {
+    <span class="vr">$src</span> = <span class="fn">str_replace</span>(<span class="str">'src='</span>, <span class="str">''</span>, <span class="vr">$ep</span>[<span class="str">'link'</span>]);
+    <span class="fn">echo</span> <span class="str">"EP "</span> . (<span class="vr">$i</span>+<span class="num">1</span>) . <span class="str">": <span class="punc">$src</span>\n"</span>;
+}</pre>
+        </div>
+      </div>
+
+      <button class="try-btn" onclick="toggleTry('try-details')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Try it yourself
+      </button>
+      <div class="try-panel" id="try-details">
+        <h4>▶ GET /v1/api/details/:id</h4>
+        <div class="try-input-row">
+          <div class="try-input-group">
+            <label>Anime ID</label>
+            <input class="try-input" type="number" id="details-id-input" value="119" min="1">
+          </div>
+          <button class="send-btn" onclick="tryDetailsApi()">Send Request</button>
+        </div>
+        <div class="try-result" id="try-details-result" style="display:none"></div>
+      </div>
+
+      <!-- EP LIST VISUAL -->
+      <div class="cards-title">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Episode Links Rendered From Response
+      </div>
+      <div class="ep-list" id="ep-sample">
+        <div class="ep-item">
+          <div class="ep-num">1</div>
+          <div class="ep-link">https://anipub.xyz/video/162345/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://anipub.xyz/video/162345/sub',this)">Copy</button>
+        </div>
+        <div class="ep-item">
+          <div class="ep-num">2</div>
+          <div class="ep-link">https://www.anipub.xyz/video/162349/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://www.anipub.xyz/video/162349/sub',this)">Copy</button>
+        </div>
+        <div class="ep-item">
+          <div class="ep-num">3</div>
+          <div class="ep-link">https://www.anipub.xyz/video/162397/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://www.anipub.xyz/video/162397/sub',this)">Copy</button>
+        </div>
+        <div class="ep-item">
+          <div class="ep-num">4</div>
+          <div class="ep-link">https://www.anipub.xyz/video/164409/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://www.anipub.xyz/video/164409/sub',this)">Copy</button>
+        </div>
+        <div class="ep-item">
+          <div class="ep-num">5</div>
+          <div class="ep-link">https://www.anipub.xyz/video/164433/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://www.anipub.xyz/video/164433/sub',this)">Copy</button>
+        </div>
+        <div class="ep-item">
+          <div class="ep-num">6</div>
+          <div class="ep-link">https://www.anipub.xyz/video/165893/sub</div>
+          <button class="ep-copy-btn" onclick="copyText('https://www.anipub.xyz/video/165893/sub',this)">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== GET /anime/api/details/:id ===== -->
+    <section class="section" id="get-anime-details">
+      <div class="section-header">
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/anime/api/details/<span class="param">:id</span></span>
+        <span class="section-title-text">Full Anime Details + MAL + Characters</span>
+      </div>
+      <p class="section-description">Returns the most comprehensive dataset: local anime info, full MyAnimeList data via Jikan API integration, and character list with voice actors. Best endpoint for rich anime pages.</p>
+
+      <div class="code-block">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="switchTab(this, 'adet-js')">Node.js</div>
+          <div class="code-tab" onclick="switchTab(this, 'adet-py')">Python</div>
+          <div class="code-tab" onclick="switchTab(this, 'adet-curl')">cURL</div>
+          <div class="code-tab" onclick="switchTab(this, 'adet-php')">PHP</div>
+          <div class="code-tab" onclick="switchTab(this, 'adet-go')">Go</div>
+        </div>
+        <div class="code-content active" id="adet-js">
+          <div class="code-header"><span>javascript</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">async function</span> <span class="fn">getFullDetails</span>(<span class="vr">id</span>) {
+  <span class="kw">const</span> <span class="vr">res</span>  = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`https://www.anipub.xyz/anime/api/details/<span class="punc">${</span><span class="vr">id</span><span class="punc">}</span>`</span>);
+  <span class="kw">const</span> { <span class="vr">local</span>, <span class="vr">jikan</span>, <span class="vr">characters</span> } = <span class="kw">await</span> <span class="vr">res</span>.<span class="fn">json</span>();
+
+  <span class="kw">const</span> <span class="fn">resolveImg</span> = <span class="vr">p</span> <span class="op">=></span>
+    <span class="vr">p</span>?.<span class="fn">startsWith</span>(<span class="str">'https://'</span>) ? <span class="vr">p</span> : <span class="str">`https://anipub.xyz/<span class="punc">${</span><span class="vr">p</span><span class="punc">}</span>`</span>;
+
+  <span class="kw">return</span> {
+    title<span class="op">:</span>    <span class="vr">local</span>.<span class="prop">Name</span>,
+    poster<span class="op">:</span>   <span class="fn">resolveImg</span>(<span class="vr">local</span>.<span class="prop">ImagePath</span>),
+    cover<span class="op">:</span>    <span class="fn">resolveImg</span>(<span class="vr">local</span>.<span class="prop">Cover</span>),
+    score<span class="op">:</span>    <span class="vr">local</span>.<span class="prop">MALScore</span>,
+    genres<span class="op">:</span>   <span class="vr">local</span>.<span class="prop">Genres</span>,
+    malData<span class="op">:</span>  <span class="vr">jikan</span>,
+    trailer<span class="op">:</span>  <span class="vr">jikan</span>.<span class="prop">trailer</span>?.<span class="prop">embed_url</span>,
+    cast<span class="op">:</span>     <span class="vr">characters</span>.<span class="fn">map</span>(<span class="vr">c</span> <span class="op">=></span> ({
+      name<span class="op">:</span>  <span class="vr">c</span>.<span class="prop">character</span>.<span class="prop">name</span>,
+      role<span class="op">:</span>  <span class="vr">c</span>.<span class="prop">role</span>,
+      image<span class="op">:</span> <span class="vr">c</span>.<span class="prop">character</span>.<span class="prop">images</span>.<span class="prop">webp</span>.<span class="prop">image_url</span>,
+      vas<span class="op">:</span>   <span class="vr">c</span>.<span class="prop">voice_actors</span>
+    }))
+  };
+}
+
+<span class="fn">getFullDetails</span>(<span class="num">119</span>).<span class="fn">then</span>(<span class="vr">d</span> <span class="op">=></span> {
+  <span class="vr">console</span>.<span class="fn">log</span>(<span class="str">`<span class="punc">${</span><span class="vr">d</span>.<span class="prop">title</span><span class="punc">}</span> — <span class="punc">${</span><span class="vr">d</span>.<span class="prop">cast</span>.<span class="prop">length</span><span class="punc">}</span> characters`</span>);
+});</pre>
+        </div>
+        <div class="code-content" id="adet-py">
+          <div class="code-header"><span>python</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">requests</span>
+
+<span class="vr">data</span>       = <span class="vr">requests</span>.<span class="fn">get</span>(<span class="str">"https://www.anipub.xyz/anime/api/details/119"</span>).<span class="fn">json</span>()
+<span class="vr">local</span>      = <span class="vr">data</span>[<span class="str">"local"</span>]
+<span class="vr">jikan</span>      = <span class="vr">data</span>[<span class="str">"jikan"</span>]
+<span class="vr">characters</span> = <span class="vr">data</span>[<span class="str">"characters"</span>]
+
+<span class="fn">print</span>(<span class="str">f"Title: <span class="punc">{</span><span class="vr">local</span>[<span class="str">'Name'</span>]<span class="punc">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"MAL Score: <span class="punc">{</span><span class="vr">local</span>[<span class="str">'MALScore'</span>]<span class="punc">}</span>"</span>)
+<span class="fn">print</span>(<span class="str">f"Synopsis: <span class="punc">{</span><span class="vr">jikan</span>[<span class="str">'synopsis'</span>][:200]<span class="punc">}</span>..."</span>)
+<span class="fn">print</span>(<span class="str">"\nMain Cast:"</span>)
+<span class="kw">for</span> <span class="vr">char</span> <span class="kw">in</span> <span class="vr">characters</span>:
+    <span class="fn">print</span>(<span class="str">f"  {<span class="punc">{</span><span class="vr">char</span>[<span class="str">'character'</span>][<span class="str">'name'</span>]<span class="punc">}</span>} ({<span class="punc">{</span><span class="vr">char</span>[<span class="str">'role'</span>]<span class="punc">}</span>})"</span>)</pre>
+        </div>
+        <div class="code-content" id="adet-curl">
+          <div class="code-header"><span>bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="cmt"># Full details</span>
+<span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/anime/api/details/119"</span> <span class="op">|</span> <span class="fn">jq</span> <span class="str">'.'</span>
+
+<span class="cmt"># Just characters</span>
+<span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/anime/api/details/119"</span> <span class="op">|</span> \
+  <span class="fn">jq</span> <span class="str">'.characters[] | {name: .character.name, role}'</span>
+
+<span class="cmt"># Local + MAL score comparison</span>
+<span class="fn">curl</span> <span class="op">-s</span> <span class="str">"https://www.anipub.xyz/anime/api/details/119"</span> <span class="op">|</span> \
+  <span class="fn">jq</span> <span class="str">'{local_score: .local.MALScore, mal_score: .jikan.score}'</span></pre>
+        </div>
+        <div class="code-content" id="adet-php">
+          <div class="code-header"><span>php</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="vr">$data</span>       = <span class="fn">json_decode</span>(<span class="fn">file_get_contents</span>(<span class="str">'https://www.anipub.xyz/anime/api/details/119'</span>), <span class="kw">true</span>);
+<span class="vr">$local</span>      = <span class="vr">$data</span>[<span class="str">'local'</span>];
+<span class="vr">$characters</span> = <span class="vr">$data</span>[<span class="str">'characters'</span>];
+
+<span class="kw">foreach</span> (<span class="vr">$characters</span> <span class="kw">as</span> <span class="vr">$char</span>) {
+    <span class="fn">echo</span> <span class="vr">$char</span>[<span class="str">'character'</span>][<span class="str">'name'</span>] . <span class="str">' — '</span> . <span class="vr">$char</span>[<span class="str">'role'</span>] . <span class="str">"\n"</span>;
+}</pre>
+        </div>
+        <div class="code-content" id="adet-go">
+          <div class="code-header"><span>go</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="vr">resp</span>, _ := <span class="vr">http</span>.<span class="fn">Get</span>(<span class="str">"https://www.anipub.xyz/anime/api/details/119"</span>)
+<span class="kw">defer</span> <span class="vr">resp</span>.<span class="prop">Body</span>.<span class="fn">Close</span>()
+
+<span class="kw">var</span> <span class="vr">result</span> <span class="kw">struct</span> {
+    Local      <span class="kw">struct</span>{ Name <span class="vr">string</span> <span class="str">`json:"Name"`</span> }        <span class="str">`json:"local"`</span>
+    Characters []<span class="kw">struct</span>{
+        Character <span class="kw">struct</span>{ Name <span class="vr">string</span> <span class="str">`json:"name"`</span> } <span class="str">`json:"character"`</span>
+        Role      <span class="vr">string</span>                                <span class="str">`json:"role"`</span>
+    } <span class="str">`json:"characters"`</span>
+}
+
+<span class="vr">json</span>.<span class="fn">NewDecoder</span>(<span class="vr">resp</span>.<span class="prop">Body</span>).<span class="fn">Decode</span>(&<span class="vr">result</span>)
+<span class="vr">fmt</span>.<span class="fn">Println</span>(<span class="vr">result</span>.<span class="prop">Local</span>.<span class="prop">Name</span>)</pre>
+        </div>
+      </div>
+
+      <button class="try-btn" onclick="toggleTry('try-adet')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Try it yourself
+      </button>
+      <div class="try-panel" id="try-adet">
+        <h4>▶ GET /anime/api/details/:id</h4>
+        <div class="try-input-row">
+          <div class="try-input-group">
+            <label>Anime ID</label>
+            <input class="try-input" type="number" id="adet-id-input" value="119" min="1">
+          </div>
+          <button class="send-btn" onclick="tryAdetApi()">Send Request</button>
+        </div>
+        <div class="try-result" id="try-adet-result" style="display:none"></div>
+      </div>
+
+      <!-- VISUAL SAMPLE -->
+      <div class="cards-title">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-8 8-8s8 4 8 8"/></svg>
+        Character & Voice Actor Grid
+      </div>
+
+      <div class="va-grid">
+        <div class="va-card">
+          <img class="va-img" src="https://cdn.myanimelist.net/images/characters/5/50781.webp" alt="Shizuka" onerror="this.style.background='var(--bg3)'">
+          <div class="va-info">
+            <div class="va-name">Masuda, Shizuka</div>
+            <div class="va-role">Main Character</div>
+            <span class="va-lang">Japanese</span>
+          </div>
+        </div>
+        <div class="va-card">
+          <img class="va-img" src="https://cdn.myanimelist.net/images/characters/6/50656.webp" alt="Ryo" onerror="this.style.background='var(--bg3)'">
+          <div class="va-info">
+            <div class="va-name">Mizuhara, Ryo</div>
+            <div class="va-role">Main Character</div>
+            <span class="va-lang">Japanese</span>
+          </div>
+        </div>
+        <div class="va-card">
+          <img class="va-img" src="https://cdn.myanimelist.net/images/characters/8/50655.webp" alt="Yurika" onerror="this.style.background='var(--bg3)'">
+          <div class="va-info">
+            <div class="va-name">Meno, Yurika</div>
+            <div class="va-role">Supporting</div>
+            <span class="va-lang">Japanese</span>
+          </div>
+        </div>
+        <div class="va-card">
+          <img class="va-img" src="https://cdn.myanimelist.net/images/characters/16/50652.webp" alt="Akane" onerror="this.style.background='var(--bg3)'">
+          <div class="va-info">
+            <div class="va-name">Mizuhara, Akane</div>
+            <div class="va-role">Supporting</div>
+            <span class="va-lang">Japanese</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANIME CARD FROM FULL DETAILS -->
+      <div class="cards-title">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        Rich Anime Card
+      </div>
+
+      <div class="anime-card">
+        <div class="anime-card-poster">
+          <img src="https://cdn.myanimelist.net/images/anime/1208/122776.jpg"
+               onerror="this.style.background='var(--surface2)'"
+               alt="JJK Culling Game">
+        </div>
+        <div class="anime-card-body">
+          <div class="anime-card-title">Jujutsu Kaisen: The Culling Game Part 1</div>
+          <div class="anime-card-synonyms">AKA: Jujutsu Kaisen 3rd Season</div>
+          <div class="anime-card-genres">
+            <span class="genre-tag">action</span>
+            <span class="genre-tag">drama</span>
+            <span class="genre-tag">school</span>
+            <span class="genre-tag">shounen</span>
+            <span class="genre-tag">supernatural</span>
+          </div>
+          <div class="anime-card-meta">
+            <div class="meta-row"><span class="meta-label">Studio</span> MAPPA</div>
+            <div class="meta-row"><span class="meta-label">Producer</span> TOHO animation</div>
+            <div class="meta-row"><span class="score-badge">★ 8.31</span></div>
+            <div class="meta-row"><span class="status-ongoing">● Ongoing</span></div>
+            <div class="meta-row"><span class="meta-label">Premiered</span> Winter 2026</div>
+            <div class="meta-row"><span class="meta-label">Episodes</span> 6</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== POST /api/check ===== -->
+    <section class="section" id="post-check">
+      <div class="section-header">
+        <span class="method-badge post">POST</span>
+        <span class="endpoint-path">/api/check</span>
+        <span class="section-title-text">Check Anime Match</span>
+      </div>
+      <p class="section-description">Checks if a given anime name and genre combination exists in the database. Pass the anime name and one or more genres; the API returns match data.</p>
+
+      <table class="params-table">
+        <thead><tr><th>Body Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="param-name">Name</span></td>
+            <td><span class="param-type">string</span></td>
+            <td><span class="required-badge">Required</span></td>
+            <td>Name of the anime to search for</td>
+          </tr>
+          <tr>
+            <td><span class="param-name">Genre</span></td>
+            <td><span class="param-type">string | array</span></td>
+            <td><span class="required-badge">Required</span></td>
+            <td>Genre string or array of genre strings. e.g. <code style="font-family:JetBrains Mono,monospace;color:var(--accent3)">'Action'</code> or <code style="font-family:JetBrains Mono,monospace;color:var(--accent3)">['Action','Drama']</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-tabs">
+          <div class="code-tab active" onclick="switchTab(this, 'chk-js')">Node.js</div>
+          <div class="code-tab" onclick="switchTab(this, 'chk-py')">Python</div>
+          <div class="code-tab" onclick="switchTab(this, 'chk-curl')">cURL</div>
+          <div class="code-tab" onclick="switchTab(this, 'chk-php')">PHP</div>
+          <div class="code-tab" onclick="switchTab(this, 'chk-axios')">Axios</div>
+        </div>
+        <div class="code-content active" id="chk-js">
+          <div class="code-header"><span>javascript (fetch)</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">const</span> <span class="vr">checkAnime</span> = <span class="kw">async</span> (<span class="vr">name</span>, <span class="vr">genre</span>) => {
+  <span class="kw">const</span> <span class="vr">res</span> = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://anipub.xyz/api/check"</span>, {
+    method<span class="op">:</span> <span class="str">"POST"</span>,
+    headers<span class="op">:</span> { <span class="str">"Content-Type"</span><span class="op">:</span> <span class="str">"application/json"</span> },
+    body<span class="op">:</span> <span class="cls">JSON</span>.<span class="fn">stringify</span>({ <span class="prop">Name</span><span class="op">:</span> <span class="vr">name</span>, <span class="prop">Genre</span><span class="op">:</span> <span class="vr">genre</span> })
+  });
+  <span class="kw">return</span> <span class="vr">res</span>.<span class="fn">json</span>();
+};
+
+<span class="cmt">// Single genre</span>
+<span class="kw">await</span> <span class="fn">checkAnime</span>(<span class="str">"Jujutsu Kaisen"</span>, <span class="str">"Action"</span>);
+
+<span class="cmt">// Multiple genres</span>
+<span class="kw">await</span> <span class="fn">checkAnime</span>(<span class="str">"Jujutsu Kaisen"</span>, [<span class="str">"Action"</span>, <span class="str">"Drama"</span>]);</pre>
+        </div>
+        <div class="code-content" id="chk-py">
+          <div class="code-header"><span>python</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">requests</span>
+
+<span class="vr">payload</span> = {
+    <span class="str">"Name"</span><span class="op">:</span>  <span class="str">"Jujutsu Kaisen"</span>,
+    <span class="str">"Genre"</span><span class="op">:</span> [<span class="str">"Action"</span>, <span class="str">"Drama"</span>]   <span class="cmt"># or "Action" as a string</span>
+}
+
+<span class="vr">res</span> = <span class="vr">requests</span>.<span class="fn">post</span>(
+    <span class="str">"https://anipub.xyz/api/check"</span>,
+    <span class="vr">json</span>=<span class="vr">payload</span>
+)
+
+<span class="fn">print</span>(<span class="vr">res</span>.<span class="fn">json</span>())</pre>
+        </div>
+        <div class="code-content" id="chk-curl">
+          <div class="code-header"><span>bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="cmt"># Single genre</span>
+<span class="fn">curl</span> <span class="op">-X</span> POST <span class="str">"https://anipub.xyz/api/check"</span> \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"Name":"Jujutsu Kaisen","Genre":"Action"}'</span>
+
+<span class="cmt"># Array of genres</span>
+<span class="fn">curl</span> <span class="op">-X</span> POST <span class="str">"https://anipub.xyz/api/check"</span> \
+  <span class="op">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="op">-d</span> <span class="str">'{"Name":"Jujutsu Kaisen","Genre":["Action","Drama"]}'</span></pre>
+        </div>
+        <div class="code-content" id="chk-php">
+          <div class="code-header"><span>php</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="vr">$payload</span> = <span class="fn">json_encode</span>([
+    <span class="str">'Name'</span>  => <span class="str">'Jujutsu Kaisen'</span>,
+    <span class="str">'Genre'</span> => [<span class="str">'Action'</span>, <span class="str">'Drama'</span>]
+]);
+
+<span class="vr">$ch</span> = <span class="fn">curl_init</span>(<span class="str">'https://anipub.xyz/api/check'</span>);
+<span class="fn">curl_setopt_array</span>(<span class="vr">$ch</span>, [
+    <span class="vr">CURLOPT_POST</span>           => <span class="kw">true</span>,
+    <span class="vr">CURLOPT_POSTFIELDS</span>     => <span class="vr">$payload</span>,
+    <span class="vr">CURLOPT_RETURNTRANSFER</span> => <span class="kw">true</span>,
+    <span class="vr">CURLOPT_HTTPHEADER</span>     => [<span class="str">'Content-Type: application/json'</span>],
+]);
+<span class="vr">$result</span> = <span class="fn">json_decode</span>(<span class="fn">curl_exec</span>(<span class="vr">$ch</span>), <span class="kw">true</span>);
+<span class="fn">var_dump</span>(<span class="vr">$result</span>);</pre>
+        </div>
+        <div class="code-content" id="chk-axios">
+          <div class="code-header"><span>javascript (axios)</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+<pre><span class="kw">import</span> <span class="vr">axios</span> <span class="kw">from</span> <span class="str">'axios'</span>;
+
+<span class="kw">const</span> { <span class="vr">data</span> } = <span class="kw">await</span> <span class="vr">axios</span>.<span class="fn">post</span>(<span class="str">'https://anipub.xyz/api/check'</span>, {
+  <span class="prop">Name</span><span class="op">:</span>  <span class="str">'Jujutsu Kaisen'</span>,
+  <span class="prop">Genre</span><span class="op">:</span> [<span class="str">'Action'</span>, <span class="str">'Drama'</span>]
+});
+
+<span class="vr">console</span>.<span class="fn">log</span>(<span class="str">'Name match:'</span>,  <span class="vr">data</span>.<span class="prop">nameMatch</span>);
+<span class="vr">console</span>.<span class="fn">log</span>(<span class="str">'Genre match:'</span>, <span class="vr">data</span>.<span class="prop">genreMatch</span>);</pre>
+        </div>
+      </div>
+
+      <button class="try-btn" onclick="toggleTry('try-check')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Try it yourself
+      </button>
+      <div class="try-panel" id="try-check">
+        <h4>▶ POST /api/check</h4>
+        <div class="try-input-row">
+          <div class="try-input-group">
+            <label>Anime Name</label>
+            <input class="try-input" type="text" id="check-name-input" value="Jujutsu Kaisen" placeholder="Anime name">
+          </div>
+          <div class="try-input-group">
+            <label>Genre (comma-separated)</label>
+            <input class="try-input" type="text" id="check-genre-input" value="Action" placeholder="Action, Drama">
+          </div>
+          <button class="send-btn" onclick="tryCheckApi()">Send Request</button>
+        </div>
+        <div class="try-result" id="try-check-result" style="display:none"></div>
+      </div>
+
+      <!-- CHECK RESULT VISUAL -->
+      <div class="cards-title">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Sample Check Result
+      </div>
+      <div class="check-result" id="check-visual-result">
+        <div class="check-icon match">✓</div>
+        <div class="check-details">
+          <div class="check-title" style="color:var(--get)">Match Found</div>
+          <div class="check-sub">Name: <strong>Jujutsu Kaisen</strong> · Genre: <strong>Action</strong> · Both match the database</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===== PLAYGROUND ===== -->
+    <section class="section" id="playground">
+      <div class="section-header">
+        <span class="section-title-text">⚡ API Playground</span>
+      </div>
+      <p class="section-description">Build and send any request to the AniPub API directly from here. Mix and match endpoints and IDs.</p>
+
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:28px;max-width:700px">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:16px">
+          <select id="pg-method" style="background:var(--code-bg);border:1px solid var(--border2);color:var(--accent4);padding:9px 12px;border-radius:7px;font-family:JetBrains Mono,monospace;font-size:0.82rem;outline:none">
+            <option>GET</option>
+            <option>POST</option>
+          </select>
+          <input id="pg-url" class="try-input" value="https://www.anipub.xyz/api/info/1" placeholder="https://www.anipub.xyz/...">
+        </div>
+        <div id="pg-body-wrap" style="display:none;margin-bottom:12px">
+          <label style="font-size:0.72rem;color:var(--text3);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px">Request Body (JSON)</label>
+          <textarea id="pg-body" class="try-input" style="height:90px;resize:vertical;font-size:0.78rem">{"Name":"Jujutsu Kaisen","Genre":"Action"}</textarea>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+          <button class="send-btn" onclick="runPlayground()">▶ Run Request</button>
+          <button style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:9px 16px;border-radius:7px;cursor:pointer;font-size:0.85rem;font-family:Outfit,sans-serif" onclick="clearPlayground()">Clear</button>
+        </div>
+        <div class="try-result" id="pg-result" style="display:none"></div>
+      </div>
+    </section>
+
+    <div style="height:80px"></div>
+  </div>
+</main>
+
+<script>
+// ===== SIDEBAR ACTIVE STATE ON SCROLL =====
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const match = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { rootMargin: '-60px 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// ===== SIDEBAR MOBILE TOGGLE =====
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('open');
+}
+
+// ===== CODE TABS =====
+function switchTab(tab, contentId) {
+  const block = tab.closest('.code-block');
+  block.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+  block.querySelectorAll('.code-content').forEach(c => c.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById(contentId).classList.add('active');
+}
+
+// ===== COPY =====
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied';
+    btn.style.color = 'var(--get)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1500);
+  });
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-content').querySelector('pre');
+  copyText(pre.innerText, btn);
+}
+
+// ===== TRY PANELS =====
+function toggleTry(id) {
+  const panel = document.getElementById(id);
+  panel.classList.toggle('open');
+}
+
+function resolveImg(path) {
+  if (!path) return '';
+  return path.startsWith('https://') ? path : 'https://anipub.xyz/' + path;
+}
+
+function showLoading(resultEl) {
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<div class="try-loading"><div class="spinner"></div>Sending request...</div>`;
+}
+
+function showResult(resultEl, data, status, time) {
+  const json = JSON.stringify(data, null, 2);
+  const colored = syntaxHighlight(json);
+  resultEl.innerHTML = `
+    <div class="try-result-header">
+      <span class="status-pill ${status < 300 ? 'status-200' : 'status-400'}">${status} ${status < 300 ? 'OK' : 'Error'}</span>
+      <span class="res-time">⏱ ${time}ms</span>
+    </div>
+    <pre>${colored}</pre>`;
+}
+
+function syntaxHighlight(json) {
+  return json
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, match => {
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) return `<span class="prop">${match}</span>`;
+        return `<span class="str">${match}</span>`;
+      }
+      if (/true|false/.test(match)) return `<span class="kw">${match}</span>`;
+      if (/null/.test(match)) return `<span class="cmt">${match}</span>`;
+      return `<span class="num">${match}</span>`;
+    });
+}
+
+// ===== API CALLS =====
+async function tryInfoApi() {
+  const id = document.getElementById('info-id-input').value || 1;
+  const result = document.getElementById('try-info-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const res = await fetch(`https://www.anipub.xyz/api/info/${id}`);
+    const data = await res.json();
+    // Resolve images
+    if (data.ImagePath) data.ImagePath = resolveImg(data.ImagePath);
+    if (data.Cover) data.Cover = resolveImg(data.Cover);
+    showResult(result, data, res.status, Date.now() - t);
+    // Render anime card
+    renderAnimeCard(data);
+  } catch(e) {
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}</pre>`;
+  }
+}
+
+function renderAnimeCard(data) {
+  // Could add dynamic card rendering here
+}
+
+async function tryGetAll() {
+  const result = document.getElementById('try-all-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const res = await fetch('https://www.anipub.xyz/api/getAll');
+    const data = await res.json();
+    document.getElementById('total-count').textContent = data + '+';
+    showResult(result, data, res.status, Date.now() - t);
+  } catch(e) {
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}</pre>`;
+  }
+}
+
+async function tryDetailsApi() {
+  const id = document.getElementById('details-id-input').value || 119;
+  const result = document.getElementById('try-details-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const res = await fetch(`https://www.anipub.xyz/v1/api/details/${id}`);
+    const data = await res.json();
+    showResult(result, data, res.status, Date.now() - t);
+    // Render ep list
+    if (data.local && data.local.ep) {
+      renderEpList(data.local.ep);
+    }
+  } catch(e) {
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}</pre>`;
+  }
+}
+
+function renderEpList(eps) {
+  const container = document.getElementById('ep-sample');
+  container.innerHTML = eps.map((ep, i) => {
+    const src = ep.link.replace('src=', '');
+    return `<div class="ep-item">
+      <div class="ep-num">${i+1}</div>
+      <div class="ep-link">${src}</div>
+      <button class="ep-copy-btn" onclick="copyText('${src}',this)">Copy</button>
+    </div>`;
+  }).join('');
+}
+
+async function tryAdetApi() {
+  const id = document.getElementById('adet-id-input').value || 119;
+  const result = document.getElementById('try-adet-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const res = await fetch(`https://www.anipub.xyz/anime/api/details/${id}`);
+    const data = await res.json();
+    if (data.local) {
+      if (data.local.ImagePath) data.local.ImagePath = resolveImg(data.local.ImagePath);
+      if (data.local.Cover) data.local.Cover = resolveImg(data.local.Cover);
+    }
+    showResult(result, data, res.status, Date.now() - t);
+    // Render VA grid from real data
+    if (data.characters && data.characters.length) {
+      renderVAGrid(data.characters);
+    }
+  } catch(e) {
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}</pre>`;
+  }
+}
+
+function renderVAGrid(chars) {
+  const grid = document.querySelector('.va-grid');
+  grid.innerHTML = chars.map(c => `
+    <div class="va-card">
+      <img class="va-img" src="${c.character.images?.webp?.image_url || c.character.images?.jpg?.image_url || ''}" 
+           alt="${c.character.name}" onerror="this.style.background='var(--bg3)'">
+      <div class="va-info">
+        <div class="va-name">${c.character.name}</div>
+        <div class="va-role">${c.role}</div>
+        ${c.voice_actors?.length ? `<span class="va-lang">${c.voice_actors[0].language}</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+async function tryCheckApi() {
+  const name = document.getElementById('check-name-input').value || 'Jujutsu Kaisen';
+  const genreRaw = document.getElementById('check-genre-input').value || 'Action';
+  const genre = genreRaw.includes(',') ? genreRaw.split(',').map(g => g.trim()) : genreRaw;
+  const result = document.getElementById('try-check-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const res = await fetch('https://anipub.xyz/api/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Name: name, Genre: genre })
+    });
+    const data = await res.json();
+    showResult(result, data, res.status, Date.now() - t);
+    // Update visual
+    const visual = document.getElementById('check-visual-result');
+    const isMatch = data && (data.nameMatch || data.match || res.ok);
+    visual.innerHTML = `
+      <div class="check-icon ${isMatch ? 'match' : 'no-match'}">${isMatch ? '✓' : '✗'}</div>
+      <div class="check-details">
+        <div class="check-title" style="color:${isMatch ? 'var(--get)' : 'var(--delete)'}">${isMatch ? 'Match Found' : 'No Match'}</div>
+        <div class="check-sub">Name: <strong>${name}</strong> · Genre: <strong>${Array.isArray(genre) ? genre.join(', ') : genre}</strong></div>
+      </div>`;
+  } catch(e) {
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}</pre>`;
+  }
+}
+
+// ===== PLAYGROUND =====
+document.getElementById('pg-method').addEventListener('change', function() {
+  document.getElementById('pg-body-wrap').style.display = this.value === 'POST' ? 'block' : 'none';
+});
+
+async function runPlayground() {
+  const method = document.getElementById('pg-method').value;
+  const url = document.getElementById('pg-url').value;
+  const body = document.getElementById('pg-body').value;
+  const result = document.getElementById('pg-result');
+  showLoading(result);
+  const t = Date.now();
+  try {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (method === 'POST' && body) opts.body = body;
+    const res = await fetch(url, opts);
+    const data = await res.json();
+    showResult(result, data, res.status, Date.now() - t);
+  } catch(e) {
+    result.style.display = 'block';
+    result.innerHTML = `<div class="try-result-header"><span class="status-pill status-400">Error</span></div><pre style="padding:16px;color:var(--delete)">${e.message}\n\nCheck if the URL is correct and the server is reachable.</pre>`;
+  }
+}
+
+function clearPlayground() {
+  document.getElementById('pg-result').style.display = 'none';
+  document.getElementById('pg-result').innerHTML = '';
+}
+
+// Close sidebar nav on link click (mobile)
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth < 900) toggleSidebar();
+  });
+});
+</script>
+</body>
+</html>
