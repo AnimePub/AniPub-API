@@ -675,54 +675,6 @@ const picks = await searchHighRated('fantasy', 8.5);
 
 ---
 
-## Publishing to NPM & GitHub
-
-This package ships pre-configured to publish to both **NPM** and **GitHub Packages** via GitHub Actions — just add your token and create a release.
-
-### Step 1 — Push to GitHub
-
-```bash
-git init
-git add .
-git commit -m "feat: initial release v1.0.0"
-git remote add origin https://github.com/YOUR_USERNAME/anipub-js.git
-git push -u origin main
-```
-
-### Step 2 — Add your NPM token
-
-1. [npmjs.com](https://www.npmjs.com) → **Access Tokens** → **Generate New Token (Classic)** → type **Publish**
-2. GitHub repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
-3. Name: `NPM_TOKEN` · Value: *(paste your token)*
-
-### Step 3 — Update package.json
-
-Replace `YOUR_USERNAME` in these fields:
-
-```json
-{
-  "repository": { "url": "https://github.com/YOUR_USERNAME/anipub-js.git" },
-  "homepage": "https://github.com/YOUR_USERNAME/anipub-js#readme"
-}
-```
-
-### Step 4 — Create a GitHub Release
-
-**Releases** → **Create a new release** → tag `v1.0.0` → **Publish release**
-
-The workflow automatically runs, builds, and publishes to **both registries**.
-
-### Manual publish
-
-```bash
-node scripts/build-cjs.js   # build CJS version
-npm publish --access public  # publish to NPM
-node test/index.test.js      # run live tests
-```
-
-
----
-
 ## License
 
 [MIT](LICENSE) © Abdullah AL Adnan 
