@@ -1,5 +1,5 @@
 {
-  "name": "anipub",
+  "name": "anipub-api",
   "version": "1.0.0",
   "description": "A full-featured JavaScript/TypeScript client for the AniPub Anime API — search, browse by genre, get streaming links, MAL data, characters & voice actors.",
   "main": "src/index.cjs",
@@ -41,7 +41,7 @@
     "anime-api",
     "japanese-animation"
   ],
-  "author": "YOUR_NAME <YOUR_EMAIL>",
+  "author": "abdullahaladnan95@gmail.com",
   "license": "MIT",
   "repository": {
     "type": "git",
