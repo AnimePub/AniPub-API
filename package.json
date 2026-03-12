@@ -1,0 +1,58 @@
+{
+  "name": "anipub",
+  "version": "1.0.0",
+  "description": "A full-featured JavaScript/TypeScript client for the AniPub Anime API — search, browse by genre, get streaming links, MAL data, characters & voice actors.",
+  "main": "src/index.cjs",
+  "module": "src/index.js",
+  "types": "src/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.cjs",
+      "types": "./src/index.d.ts"
+    }
+  },
+  "files": [
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build-cjs.js",
+    "test": "node test/index.test.js",
+    "prepublishOnly": "node scripts/build-cjs.js",
+    "example": "node examples/basic.js",
+    "example:advanced": "node examples/advanced.js"
+  },
+  "keywords": [
+    "anime",
+    "anipub",
+    "manga",
+    "api",
+    "myanimelist",
+    "mal",
+    "jikan",
+    "streaming",
+    "search",
+    "genre",
+    "characters",
+    "voice-actors",
+    "anime-api",
+    "japanese-animation"
+  ],
+  "author": "YOUR_NAME <YOUR_EMAIL>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/anipub-js.git"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/anipub-js#readme",
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/anipub-js/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false
+}
