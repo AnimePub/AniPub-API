@@ -1,4 +1,7 @@
-
+/* ═══════════════════════════════════════════════════
+   AniPub API Docs — app.js v3
+   IDs match exactly what's in index.html
+   ═══════════════════════════════════════════════════ */
 
 const html = document.documentElement;
 
@@ -591,3 +594,104 @@ async function loadBrowser(genre, page) {
   }
 }
 function goBrowserPg(p) { _bPage = p; loadBrowser(_bGenre, p); }
+
+/* ── /api/getlast ── */
+async function runGetlast() {
+  showLoading('getlast-res');
+  const vis = document.getElementById('getlast-vis');
+  if (vis) vis.innerHTML = '';
+  const t0 = Date.now();
+  try {
+    const res  = await fetch('https://anipub.xyz/api/getlast');
+    const data = await res.json();
+    const ms   = Date.now() - t0;
+    showResult('getlast-res', data, res.status, ms);
+    if (vis) vis.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;background:var(--surf);
+                  border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;margin-top:4px">
+        <div style="background:var(--acc-d);border:1px solid var(--acc-g);
+                    border-radius:9px;padding:8px 16px;font-family:'JetBrains Mono',monospace;
+                    font-size:1.3rem;font-weight:700;color:var(--acc)">${data}</div>
+        <div>
+          <div style="font-weight:700;font-size:.9rem">Latest Anime ID</div>
+          <div style="font-size:.76rem;color:var(--txt2);margin-top:2px">
+            Fetch <code style="font-family:'JetBrains Mono',monospace;font-size:.78em;
+            color:var(--amb);background:var(--surf2);padding:1px 5px;border-radius:3px">/api/info/${data}</code> for details
+          </div>
+        </div>
+      </div>`;
+  } catch(e) { showError('getlast-res', e.message) }
+}
+
+/* ── /api/sort ── */
+let _sortPg = 1;
+
+function prevSort() {
+  const name  = document.getElementById('sort-name')?.value.trim();
+  const genre = document.getElementById('sort-genre')?.value.trim();
+  const from  = document.getElementById('sort-from')?.value;
+  const to    = document.getElementById('sort-to')?.value;
+  const page  = document.getElementById('sort-page')?.value || 1;
+  const p = new URLSearchParams();
+  if (name)  p.set('name',     name);
+  if (genre) p.set('genre',    genre);
+  if (from !== undefined) p.set('ratefrom', from);
+  if (to   !== undefined) p.set('rateto',   to);
+  p.set('page', page);
+  const el = document.getElementById('sort-prev');
+  if (el) el.textContent = `GET https://anipub.xyz/api/sort?${p.toString()}`;
+}
+
+async function runSort(pageOverride) {
+  const name  = document.getElementById('sort-name')?.value.trim();
+  const genre = document.getElementById('sort-genre')?.value.trim();
+  const from  = document.getElementById('sort-from')?.value ?? '0';
+  const to    = document.getElementById('sort-to')?.value   ?? '10';
+  const page  = pageOverride || parseInt(document.getElementById('sort-page')?.value) || 1;
+
+  if (pageOverride) {
+    const pg = document.getElementById('sort-page');
+    if (pg) pg.value = pageOverride;
+  }
+  _sortPg = page;
+
+  const p = new URLSearchParams();
+  if (name)  p.set('name',     name);
+  if (genre) p.set('genre',    genre);
+  p.set('ratefrom', from);
+  p.set('rateto',   to);
+  p.set('page',     page);
+
+  showLoading('sort-res');
+  document.getElementById('sort-vis').innerHTML  = '';
+  document.getElementById('sort-pager').innerHTML = '';
+  prevSort();
+
+  const t0 = Date.now();
+  try {
+    const res  = await fetch(`https://anipub.xyz/api/sort?${p.toString()}`);
+    const data = await res.json();
+    const ms   = Date.now() - t0;
+    showResult('sort-res', data, res.status, ms);
+
+    if (res.ok && Array.isArray(data)) {
+      // Response: [totalPages, [anime...]]
+      const totalPages = data[0];
+      const items      = Array.isArray(data[1]) ? data[1] : [];
+
+      renderGcCards('sort-vis', items);
+
+      // Pagination using totalPages from response
+      const el = document.getElementById('sort-pager');
+      if (el && totalPages > 1) {
+        const pages = [];
+        if (page > 1)          pages.push(page - 1);
+        pages.push(page);
+        if (page < totalPages) pages.push(page + 1);
+        el.innerHTML = pages.map(pg =>
+          `<button class="pg-btn${pg === page ? ' active' : ''}" onclick="runSort(${pg})">${pg}</button>`
+        ).join('') + `<span style="font-size:.7rem;color:var(--txt3);margin-left:6px;align-self:center">of ${totalPages}</span>`;
+      }
+    }
+  } catch(e) { showError('sort-res', e.message) }
+}

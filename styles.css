@@ -1,11 +1,4 @@
-/* ═══════════════════════════════════════════════════
-   AniPub API Docs — styles.css v3
-   Fonts: JetBrains Mono · Syne · DM Sans (via HTML <link>)
-   JSON result panels adapt to light/dark theme.
-   Code blocks always stay dark (#070b14).
-   ═══════════════════════════════════════════════════ */
 
-/* ── DARK THEME (default) ─────────────────────────── */
 :root {
   --bg:      #06080f;
   --bg2:     #090c16;
@@ -167,7 +160,6 @@ img    { max-width: 100%; display: block }
 .logo { display: flex; align-items: center; gap: 8px }
 .logo-mark {
   width: 28px; height: 28px; border-radius: 7px;
-  background: linear-gradient(135deg, var(--acc), var(--pur));
   display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0;
 }
 .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--txt) }
