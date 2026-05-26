@@ -39,4 +39,4 @@ module.exports.default = AniPub;
 
 mkdirSync(join(__dirname, '../src'), { recursive: true });
 writeFileSync(join(__dirname, '../src/index.cjs'), cjs);
-console.log('✅ CJS build complete → src/index.cjs');
+console.log(' CJS build complete → src/index.cjs');

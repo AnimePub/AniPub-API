@@ -69,7 +69,7 @@ class AniPubError extends Error {
   }
 }
 
-
+// ─── Endpoints ───────────────────────────────────────────────────────────────
 
 /**
  * GET /api/info/:id
@@ -266,7 +266,7 @@ export async function searchAll(query, page = 1) {
   return data;
 }
 
-
+// ─── Convenience class ───────────────────────────────────────────────────────
 
 /**
  * AniPub client class — wraps all endpoints as instance methods.
