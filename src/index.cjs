@@ -82,7 +82,7 @@ class AniPubError extends Error {
  * const anime = await getInfo(61);
  * const anime = await getInfo('black-clover');
  */
-export async function getInfo(idOrSlug) {
+async function getInfo(idOrSlug) {
   const data = await apiFetch(`${BASE_URL}/api/info/${encodeURIComponent(idOrSlug)}`);
   return fixImages(data);
 }
@@ -98,7 +98,7 @@ export async function getInfo(idOrSlug) {
  * const total = await getTotal();
  * console.log(`IDs 1 to ${total}`);
  */
-export async function getTotal() {
+async function getTotal() {
   return apiFetch(`${BASE_URL}/api/getAll`);
 }
 
@@ -114,7 +114,7 @@ export async function getTotal() {
  * const result = await findByName('One Piece');
  * if (result.exist) console.log(`ID: ${result.id}, Episodes: ${result.ep}`);
  */
-export async function findByName(name) {
+async function findByName(name) {
   return apiFetch(`${BASE_URL}/api/find/${encodeURIComponent(name)}`);
 }
 
@@ -133,7 +133,7 @@ export async function findByName(name) {
  * const { episodes } = await getStreamingLinks(119);
  * // episodes[0] = { ep: 1, src: 'https://...' }
  */
-export async function getStreamingLinks(id, { stripSrc = true } = {}) {
+async function getStreamingLinks(id, { stripSrc = true } = {}) {
   const data = await apiFetch(`${BASE_URL}/v1/api/details/${id}`);
   const local = data.local;
 
@@ -162,7 +162,7 @@ export async function getStreamingLinks(id, { stripSrc = true } = {}) {
  * console.log(local.Name, local.MALScore);
  * characters.forEach(c => console.log(c.character.name, c.role));
  */
-export async function getFullDetails(id) {
+async function getFullDetails(id) {
   const data = await apiFetch(`${BASE_URL}/anime/api/details/${id}`);
   if (data.local) data.local = fixImages(data.local);
   return data;
@@ -180,7 +180,7 @@ export async function getFullDetails(id) {
  * const { currentPage, wholePage } = await findByGenre('action', 1);
  * wholePage.forEach(a => console.log(a.Name));
  */
-export async function findByGenre(genre, page = 1) {
+async function findByGenre(genre, page = 1) {
   const data = await apiFetch(`${BASE_URL}/api/findbyGenre/${encodeURIComponent(genre)}?Page=${page}`);
   if (Array.isArray(data.wholePage)) {
     data.wholePage = data.wholePage.map(fixImages);
@@ -200,7 +200,7 @@ export async function findByGenre(genre, page = 1) {
  * await checkAnime('Black Clover', 'Action');
  * await checkAnime('Jujutsu Kaisen', ['Action', 'Drama']);
  */
-export async function checkAnime(name, genre) {
+async function checkAnime(name, genre) {
   return apiFetch(`${BASE_URL}/api/check`, {
     method: 'POST',
     body: JSON.stringify({ Name: name, Genre: genre }),
@@ -218,7 +218,7 @@ export async function checkAnime(name, genre) {
  * const { AniData, currentPage } = await getTopRated(1);
  * AniData.forEach(a => console.log(a.Name, a.MALScore));
  */
-export async function getTopRated(page = 1) {
+async function getTopRated(page = 1) {
   const data = await apiFetch(`${BASE_URL}/api/findbyrating?page=${page}`);
   if (Array.isArray(data.AniData)) {
     data.AniData = data.AniData.map(fixImages);
@@ -238,7 +238,7 @@ export async function getTopRated(page = 1) {
  * const results = await search('One Piece');
  * results.forEach(r => console.log(r.Name, r.Id));
  */
-export async function search(query) {
+async function search(query) {
   const data = await apiFetch(`${BASE_URL}/api/search/${encodeURIComponent(query)}`);
   return Array.isArray(data) ? data.map(fixImages) : data;
 }
@@ -256,7 +256,7 @@ export async function search(query) {
  * const { AniData, currentPage } = await searchAll('Naruto', 1);
  * AniData.forEach(a => console.log(a.Name, a.MALScore));
  */
-export async function searchAll(query, page = 1) {
+async function searchAll(query, page = 1) {
   const data = await apiFetch(
     `${BASE_URL}/api/searchall/${encodeURIComponent(query)}?page=${page}`
   );

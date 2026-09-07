@@ -12,7 +12,7 @@ const src = readFileSync(join(__dirname, '../src/index.js'), 'utf-8');
 // Transform ESM → CJS
 const cjs = src
   // Remove export keywords from declarations
-  .replace(/^export (class|function|const|let|var) /gm, '$1 ')
+  .replace(/^export (default )?(async )?(class|function|const|let|var) /gm, '$1$2$3 ')
   // Remove "export default AniPub;"
   .replace(/^export default .+;$/gm, '')
   // Remove named export blocks like export { ... }
