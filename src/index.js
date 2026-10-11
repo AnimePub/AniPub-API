@@ -4,10 +4,10 @@
  * findbyGenre, check, findbyrating, search, searchall
  *
  * @module anipub
- * @see https://api.anipub.xyz
+ * @see https://api.anipub.org
  */
 
-const BASE_URL = 'https://www.anipub.xyz';
+const BASE_URL = 'https://www.anipub.org';
 
 
 
@@ -18,7 +18,7 @@ const BASE_URL = 'https://www.anipub.xyz';
  */
 function fixImage(path) {
   if (!path) return '';
-  return path.startsWith('https://') ? path : `https://anipub.xyz/${path}`;
+  return path.startsWith('https://') ? path : `https://anipub.org/${path}`;
 }
 
 /**

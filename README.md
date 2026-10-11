@@ -2,7 +2,7 @@
 
 # anipub
 
-**A full-featured JavaScript/TypeScript client for the [AniPub Anime API](https://api.anipub.xyz)**
+**A full-featured JavaScript/TypeScript client for the [AniPub Anime API](https://api.anipub.org)**
 
 Search · Browse · Stream · MAL Data · Characters · Voice Actors
 
@@ -19,7 +19,7 @@ Search · Browse · Stream · MAL Data · Characters · Voice Actors
 
 ## What is this?
 
-`anipub` is a zero-dependency, isomorphic JavaScript wrapper for the [AniPub API](https://api.anipub.xyz) — a free, open anime metadata service with MAL integration. It covers **all 10 endpoints** in one clean package with full TypeScript support.
+`anipub` is a zero-dependency, isomorphic JavaScript wrapper for the [AniPub API](https://api.anipub.org) — a free, open anime metadata service with MAL integration. It covers **all 10 endpoints** in one clean package with full TypeScript support.
 
 ```bash
 npm install anipub
@@ -96,7 +96,7 @@ console.log(anime.Name);      // "Attack on Titan"
 console.log(anime.MALScore);  // "9.00"
 console.log(anime.Genres);    // ["action", "drama", "fantasy"]
 console.log(anime.epCount);   // 75
-console.log(anime.ImagePath); // "https://anipub.xyz/..." (always absolute)
+console.log(anime.ImagePath); // "https://anipub.org/..." (always absolute)
 
 // 3. Top rated
 const { AniData } = await getTopRated();
@@ -147,7 +147,7 @@ console.log(anime.Status);     // "Finished Airing"
 console.log(anime.Genres);     // ["action", "fantasy", "magic"]
 console.log(anime.Aired);      // "Oct 3, 2017 to Mar 30, 2021"
 console.log(anime.Studios);    // "Pierrot"
-console.log(anime.ImagePath);  // "https://anipub.xyz/..." (always absolute)
+console.log(anime.ImagePath);  // "https://anipub.org/..." (always absolute)
 ```
 
 **Returns:** `AnimeInfo`
@@ -682,5 +682,5 @@ const picks = await searchHighRated('fantasy', 8.5);
 ---
 
 <div align="center">
-  <sub>Built with ❤️ for the anime community · <a href="https://api.anipub.xyz">AniPub API Docs</a></sub>
+  <sub>Built with ❤️ for the anime community · <a href="https://api.anipub.org">AniPub API Docs</a></sub>
 </div>

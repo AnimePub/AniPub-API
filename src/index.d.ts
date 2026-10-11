@@ -1,7 +1,7 @@
 /**
  * AniPub JS — TypeScript declarations
  * Full-featured client for the AniPub Anime API
- * @see https://api.anipub.xyz
+ * @see https://api.anipub.org
  */
 
 export interface AnimeInfo {

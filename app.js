@@ -1,8 +1,3 @@
-/* ═══════════════════════════════════════════════════
-   AniPub API Docs — app.js v3
-   IDs match exactly what's in index.html
-   ═══════════════════════════════════════════════════ */
-
 const html = document.documentElement;
 
 /* ── THEME ── */
@@ -96,7 +91,7 @@ function toggleTry(id) {
 /* ── HELPERS ── */
 function fixImg(p) {
   if (!p) return '';
-  return (p.startsWith('https://') || p.startsWith('http://')) ? p : `https://anipub.xyz/${p}`;
+  return (p.startsWith('https://') || p.startsWith('http://')) ? p : `https://anipub.org/${p}`;
 }
 
 function syntaxHL(json) {
@@ -169,7 +164,7 @@ function renderGcCards(id, items) {
 /* ── LOAD TOTAL COUNT ── */
 async function loadCount() {
   try {
-    const n = await (await fetch('https://anipub.xyz/api/getAll')).json();
+    const n = await (await fetch('https://anipub.org/api/getAll')).json();
     ['heroCount','sbCount'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = (+n).toLocaleString();
@@ -182,34 +177,34 @@ loadCount();
 function prevInfo() {
   const v = document.getElementById('info-inp')?.value.trim();
   const e = document.getElementById('info-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/info/${v||'…'}`;
+  if (e) e.textContent = `GET https://anipub.org/api/info/${v||'…'}`;
 }
 function prevFind() {
   const v = document.getElementById('find-inp')?.value.trim();
   const e = document.getElementById('find-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/find/${encodeURIComponent(v||'')||'…'}`;
+  if (e) e.textContent = `GET https://anipub.org/api/find/${encodeURIComponent(v||'')||'…'}`;
 }
 function prevGenre() {
   const g = document.getElementById('genre-inp')?.value.trim();
   const p = document.getElementById('genre-page')?.value || 1;
   const e = document.getElementById('genre-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/findbyGenre/${g||'…'}?Page=${p}`;
+  if (e) e.textContent = `GET https://anipub.org/api/findbyGenre/${g||'…'}?Page=${p}`;
 }
 function prevRating() {
   const p = document.getElementById('rating-page')?.value || 1;
   const e = document.getElementById('rating-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/findbyrating?page=${p}`;
+  if (e) e.textContent = `GET https://anipub.org/api/findbyrating?page=${p}`;
 }
 function prevSearch() {
   const v = document.getElementById('search-inp')?.value.trim();
   const e = document.getElementById('search-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/search/${encodeURIComponent(v||'')||'…'}`;
+  if (e) e.textContent = `GET https://anipub.org/api/search/${encodeURIComponent(v||'')||'…'}`;
 }
 function prevSearchAll() {
   const v = document.getElementById('sall-inp')?.value.trim();
   const p = document.getElementById('sall-page')?.value || 1;
   const e = document.getElementById('sall-prev');
-  if (e) e.textContent = `GET https://anipub.xyz/api/searchall/${encodeURIComponent(v||'')||'…'}?page=${p}`;
+  if (e) e.textContent = `GET https://anipub.org/api/searchall/${encodeURIComponent(v||'')||'…'}?page=${p}`;
 }
 
 /* ═══ TRY-IT HANDLERS ═══ */
@@ -222,7 +217,7 @@ async function runInfo() {
   document.getElementById('info-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/info/${encodeURIComponent(val)}`);
+    const res  = await fetch(`https://anipub.org/api/info/${encodeURIComponent(val)}`);
     const data = await res.json();
     showResult('info-res', data, res.status, Date.now()-t0);
     if (res.ok) {
@@ -247,7 +242,7 @@ async function runGetAll() {
   showLoading('ga-res');
   const t0 = Date.now();
   try {
-    const res  = await fetch('https://anipub.xyz/api/getAll');
+    const res  = await fetch('https://anipub.org/api/getAll');
     const data = await res.json();
     showResult('ga-res', data, res.status, Date.now()-t0);
   } catch(e) { showError('ga-res', e.message) }
@@ -261,7 +256,7 @@ async function runFind() {
   document.getElementById('find-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/find/${encodeURIComponent(name)}`);
+    const res  = await fetch(`https://anipub.org/api/find/${encodeURIComponent(name)}`);
     const data = await res.json();
     showResult('find-res', data, res.status, Date.now()-t0);
     const vis = document.getElementById('find-vis');
@@ -289,7 +284,7 @@ async function runStream() {
   document.getElementById('stream-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/v1/api/details/${id}`);
+    const res  = await fetch(`https://anipub.org/v1/api/details/${id}`);
     const data = await res.json();
     showResult('stream-res', data, res.status, Date.now()-t0);
     if (res.ok && data.local) {
@@ -330,7 +325,7 @@ async function runAdet() {
   document.getElementById('adet-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/anime/api/details/${id}`);
+    const res  = await fetch(`https://anipub.org/anime/api/details/${id}`);
     const data = await res.json();
     showResult('adet-res', data, res.status, Date.now()-t0);
     if (res.ok) {
@@ -381,7 +376,7 @@ async function runGenre() {
   document.getElementById('genre-pager').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/findbyGenre/${g}?Page=${p}`);
+    const res  = await fetch(`https://anipub.org/api/findbyGenre/${g}?Page=${p}`);
     const data = await res.json();
     showResult('genre-res', data, res.status, Date.now()-t0);
     if (res.ok) {
@@ -406,7 +401,7 @@ async function runCheck() {
   document.getElementById('check-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch('https://anipub.xyz/api/check', {
+    const res  = await fetch('https://anipub.org/api/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ Name: name, Genre: genre })
@@ -435,7 +430,7 @@ async function runRating() {
   document.getElementById('rating-pager').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/findbyrating?page=${p}`);
+    const res  = await fetch(`https://anipub.org/api/findbyrating?page=${p}`);
     const data = await res.json();
     showResult('rating-res', data, res.status, Date.now()-t0);
     if (res.ok) {
@@ -458,7 +453,7 @@ async function runSearch() {
   document.getElementById('search-vis').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/search/${encodeURIComponent(q)}`);
+    const res  = await fetch(`https://anipub.org/api/search/${encodeURIComponent(q)}`);
     const data = await res.json();
     showResult('search-res', data, res.status, Date.now()-t0);
     if (res.ok && Array.isArray(data)) {
@@ -495,7 +490,7 @@ async function runSearchAll() {
   document.getElementById('sall-pager').innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/searchall/${encodeURIComponent(q)}?page=${p}`);
+    const res  = await fetch(`https://anipub.org/api/searchall/${encodeURIComponent(q)}?page=${p}`);
     const data = await res.json();
     showResult('sall-res', data, res.status, Date.now()-t0);
     if (res.ok) {
@@ -564,7 +559,7 @@ async function loadBrowser(genre, page) {
   if (grid) grid.innerHTML = `<div style="grid-column:1/-1"><div class="tp-loading"><div class="spin"></div>Loading ${genre}…</div></div>`;
 
   try {
-    const res   = await fetch(`https://anipub.xyz/api/findbyGenre/${genre}?Page=${page}`);
+    const res   = await fetch(`https://anipub.org/api/findbyGenre/${genre}?Page=${page}`);
     const data  = await res.json();
     const items = data.wholePage || [];
 
@@ -602,7 +597,7 @@ async function runGetlast() {
   if (vis) vis.innerHTML = '';
   const t0 = Date.now();
   try {
-    const res  = await fetch('https://anipub.xyz/api/getlast');
+    const res  = await fetch('https://anipub.org/api/getlast');
     const data = await res.json();
     const ms   = Date.now() - t0;
     showResult('getlast-res', data, res.status, ms);
@@ -639,7 +634,7 @@ function prevSort() {
   if (to   !== undefined) p.set('rateto',   to);
   p.set('page', page);
   const el = document.getElementById('sort-prev');
-  if (el) el.textContent = `GET https://anipub.xyz/api/sort?${p.toString()}`;
+  if (el) el.textContent = `GET https://anipub.org/api/sort?${p.toString()}`;
 }
 
 async function runSort(pageOverride) {
@@ -669,7 +664,7 @@ async function runSort(pageOverride) {
 
   const t0 = Date.now();
   try {
-    const res  = await fetch(`https://anipub.xyz/api/sort?${p.toString()}`);
+    const res  = await fetch(`https://anipub.org/api/sort?${p.toString()}`);
     const data = await res.json();
     const ms   = Date.now() - t0;
     showResult('sort-res', data, res.status, ms);
