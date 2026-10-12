@@ -54,8 +54,5 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "sideEffects": false,
-  "dependencies": {
-    "hono": "^4.13.7"
-  }
+  "sideEffects": false
 }
