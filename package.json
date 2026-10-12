@@ -1,6 +1,6 @@
 {
   "name": "anipub",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A full-featured JavaScript/TypeScript client for the AniPub Anime API — search, browse by genre, get streaming links, MAL data, characters & voice actors.",
   "main": "src/index.cjs",
   "module": "src/index.js",
