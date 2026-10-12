@@ -1,7 +1,3 @@
-/**
- * Simple build script to generate a CommonJS version of the library.
- * Run: node scripts/build-cjs.js
- */
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -9,34 +5,26 @@ import { dirname, join } from 'path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const src = readFileSync(join(__dirname, '../src/index.js'), 'utf-8');
 
-// Transform ESM → CJS
-const cjs = src
-  // Remove export keywords from declarations
-  .replace(/^export (class|function|const|let|var) /gm, '$1 ')
-  // Remove "export default AniPub;"
-  .replace(/^export default .+;$/gm, '')
-  // Remove named export blocks like export { ... }
+const declaration = /^export (async function|function|class|const|let|var) (\w+)/gm;
+const names = [...src.matchAll(declaration)].map((match) => match[2]);
+
+const defaultMatch = src.match(/^export default (\w+);?\s*$/m);
+const defaultName = defaultMatch ? defaultMatch[1] : 'AniPub';
+
+const body = src
+  .replace(/^export (async function|function|class|const|let|var) /gm, '$1 ')
+  .replace(/^export default .+;?\s*$/gm, '')
   .replace(/^export \{[^}]+\};?\s*$/gm, '')
-  // Add CJS module.exports at end
-  + `
-// CommonJS exports
+  .trimEnd();
+
+const cjs = `${body}
+
 module.exports = {
-  AniPub,
-  AniPubError,
-  getInfo,
-  getTotal,
-  findByName,
-  getStreamingLinks,
-  getFullDetails,
-  findByGenre,
-  checkAnime,
-  getTopRated,
-  search,
-  searchAll,
+${names.map((name) => `  ${name},`).join('\n')}
 };
-module.exports.default = AniPub;
+module.exports.default = ${defaultName};
 `;
 
 mkdirSync(join(__dirname, '../src'), { recursive: true });
 writeFileSync(join(__dirname, '../src/index.cjs'), cjs);
-console.log(' CJS build complete → src/index.cjs');
+console.log('CJS build complete → src/index.cjs');
