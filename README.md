@@ -677,7 +677,7 @@ const picks = await searchHighRated('fantasy', 8.5);
 
 ## License
 
-[GPL3](LICENSE) © Abdullah AL Adnan 
+[MIT](LICENSE) © Abdullah AL Adnan 
 
 ---
 
